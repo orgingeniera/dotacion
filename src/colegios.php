@@ -13,7 +13,7 @@ if (empty($existe) && $id_user != 1) {
 }
 
 if (!empty($_POST)) {
-    $alert = "";
+   
     if (empty($_POST['nombre']) || empty($_POST['id_municipios'])) {
         $_SESSION['alert'] =  '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         El nombre del colegio y el municipio son obligatorios
@@ -86,7 +86,7 @@ include_once "includes/header.php";
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
-                <?php echo (isset($alert)) ? $alert : ''; 
+                <?php 
                 if (isset($_SESSION['alert'])) {
                     echo $_SESSION['alert'];
                     unset($_SESSION['alert']);
