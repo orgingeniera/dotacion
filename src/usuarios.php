@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 $permiso = 'usuarios';
 $id_user = $_SESSION['idUser'];
 include "../conexion.php";
@@ -13,9 +14,9 @@ if (!empty($_POST)) {
     $nombre = $_POST['nombre'];
     $email = $_POST['correo'];
     $user = $_POST['usuario'];
-    $alert = "";
+   
     if (empty($nombre) || empty($email) || empty($user)) {
-        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                     Todo los campos son obligatorio
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -25,7 +26,7 @@ if (!empty($_POST)) {
         if (empty($id)) {
             $clave = $_POST['clave'];
             if (empty($clave)) {
-                $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                     La contraseña es requerido
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -36,7 +37,7 @@ if (!empty($_POST)) {
                 $query = mysqli_query($conexion, "SELECT * FROM usuario where correo = '$email'");
                 $result = mysqli_fetch_array($query);
                 if ($result > 0) {
-                    $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                     El correo ya existe
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -45,14 +46,14 @@ if (!empty($_POST)) {
                 } else {
                     $query_insert = mysqli_query($conexion, "INSERT INTO usuario(nombre,correo,usuario,clave) values ('$nombre', '$email', '$user', '$clave')");
                     if ($query_insert) {
-                        $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                     Usuario Registrado
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>';
                     } else {
-                        $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        $_SESSION['alert'] ='<div class="alert alert-danger alert-dismissible fade show" role="alert">
                     Error al registrar
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -64,14 +65,14 @@ if (!empty($_POST)) {
         } else {
             $sql_update = mysqli_query($conexion, "UPDATE usuario SET nombre = '$nombre', correo = '$email' , usuario = '$user' WHERE idusuario = $id");
             if ($sql_update) {
-                $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                     Usuario Modificado
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>';
             } else {
-                $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-danger alert-dismissible fade show" role="alert">
                     Error al modificar
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -80,45 +81,54 @@ if (!empty($_POST)) {
             }
         }
     }
+    mysqli_close($conexion);
+    // Redirige después de procesar el formulario
+    header("Location: usuarios.php"); 
+    exit;
 }
 include "includes/header.php";
 ?>
 <div class="card">
     <div class="card-body">
         <form action="" method="post" autocomplete="off" id="formulario">
-            <?php echo isset($alert) ? $alert : ''; ?>
+        <?php 
+                if (isset($_SESSION['alert'])) {
+                    echo $_SESSION['alert'];
+                    unset($_SESSION['alert']);
+                }
+                ?>
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" placeholder="Ingrese Nombre" name="nombre" id="nombre">
-                        <input type="hidden" id="id" name="id">
+                        <input type="text" required class="form-control" placeholder="Ingrese Nombre" name="nombre" id="nombre">
+                        <input type="hidden"required id="id" name="id">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="correo">Correo</label>
-                        <input type="email" class="form-control" placeholder="Ingrese Correo Electrónico" name="correo" id="correo">
+                        <input type="email"required class="form-control" placeholder="Ingrese Correo Electrónico" name="correo" id="correo">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="usuario">Usuario</label>
-                        <input type="text" class="form-control" placeholder="Ingrese Usuario" name="usuario" id="usuario">
+                        <input type="text" required class="form-control" placeholder="Ingrese Usuario" name="usuario" id="usuario">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="clave">Contraseña</label>
-                        <input type="password" class="form-control" placeholder="Ingrese Contraseña" name="clave" id="clave">
+                        <input type="password" required class="form-control" placeholder="Ingrese Contraseña" name="clave" id="clave">
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+            <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
+            <input type="button"required  value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
         </form>
     </div>
 </div>

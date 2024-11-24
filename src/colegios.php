@@ -97,8 +97,8 @@ include_once "includes/header.php";
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nombre" class="text-dark font-weight-bold">Nombre del Colegio</label>
-                                <input type="text" placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control">
-                                <input type="hidden" name="id" id="id">
+                                <input type="text" required placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control">
+                                <input type="hidden"required name="id" id="id">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -116,8 +116,8 @@ include_once "includes/header.php";
                             </div>
                         </div>
                         <div class="col-md-12 mt-3">
-                            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-                            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+                            <input type="submit" required value="Registrar" class="btn btn-primary" id="btnAccion">
+                            <input type="button" required value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                         </div>
                     </div>
                 </form>

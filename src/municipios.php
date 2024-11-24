@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 include "../conexion.php";
 $id_user = $_SESSION['idUser'];
 $permiso = "municipios";
@@ -10,9 +11,9 @@ if (empty($existe) && $id_user != 1) {
 }
 
 if (!empty($_POST)) {
-    $alert = "";
+    
     if (empty($_POST['nombre'])) {
-        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        $_SESSION['alert'] = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         Todo los campos son obligatorio
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -26,7 +27,7 @@ if (!empty($_POST)) {
             $query = mysqli_query($conexion, "SELECT * FROM municipios WHERE nombre = '$nombre'");
             $result = mysqli_fetch_array($query);
             if ($result > 0) {
-                $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] =  '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         El municipio ya existe
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -35,14 +36,14 @@ if (!empty($_POST)) {
             } else {
                 $query_insert = mysqli_query($conexion, "INSERT INTO municipios(nombre) values ('$nombre')");
                 if ($query_insert) {
-                    $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] =  '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Municipio registrado
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
                 } else {
-                    $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] =  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Error al registrar
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -53,14 +54,14 @@ if (!empty($_POST)) {
         }else{
             $sql_update = mysqli_query($conexion, "UPDATE municipios SET nombre = '$nombre' WHERE id_municipios = $id");
             if ($sql_update) {
-                $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Municipio Modificado
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
             } else {
-                $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] =  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Error al modificar
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -70,6 +71,10 @@ if (!empty($_POST)) {
         }
     }
     mysqli_close($conexion);
+    // Redirige después de procesar el formulario
+    header("Location: municipios.php"); 
+    exit;
+    
 }
 include_once "includes/header.php";
 ?>
@@ -77,19 +82,24 @@ include_once "includes/header.php";
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
-                <?php echo (isset($alert)) ? $alert : '' ; ?>
+            <?php 
+                if (isset($_SESSION['alert'])) {
+                    echo $_SESSION['alert'];
+                    unset($_SESSION['alert']);
+                }
+                ?>
                 <form action="" method="post" autocomplete="off" id="formulario">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="nombre" class="text-dark font-weight-bold">Nombre</label>
-                                <input type="text" placeholder="Ingrese Nombre del Municipio" name="nombre" id="nombre" class="form-control">
-                                <input type="hidden" id="id" name="id">
+                                <label for="nombre"required class="text-dark font-weight-bold">Nombre</label>
+                                <input type="text" required placeholder="Ingrese Nombre del Municipio" name="nombre" id="nombre" class="form-control">
+                                <input type="hidden"required id="id" name="id">
                             </div>
                         </div>
                         <div class="col-md-4 mt-3">
-                            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-                            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+                            <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
+                            <input type="button"required value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                         </div>
                     </div>
                 </form>
