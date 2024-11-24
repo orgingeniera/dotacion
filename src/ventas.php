@@ -23,19 +23,19 @@ include_once "includes/header.php";
                             <div class="form-group">
                                 <input type="hidden" id="idcliente" value="1" name="idcliente" required>
                                 <label>Nombre</label>
-                                <input type="text" name="nom_cliente" id="nom_cliente" class="form-control" placeholder="Ingrese nombre del cliente" required>
+                                <input type="text" required name="nom_cliente" id="nom_cliente" class="form-control" placeholder="Ingrese nombre del cliente" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Teléfono</label>
-                                <input type="number" name="tel_cliente" id="tel_cliente" class="form-control" disabled required>
+                                <input type="number"required name="tel_cliente" id="tel_cliente" class="form-control" disabled required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Dirreción</label>
-                                <input type="text" name="dir_cliente" id="dir_cliente" class="form-control" disabled required>
+                                <input type="text" required name="dir_cliente" id="dir_cliente" class="form-control" disabled required>
                             </div>
                         </div>
                     </div>
@@ -51,26 +51,26 @@ include_once "includes/header.php";
                     <div class="col-lg-5">
                         <div class="form-group">
                             <label for="producto">Código o Nombre</label>
-                            <input id="producto" class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">
-                            <input id="id" type="hidden" name="id">
+                            <input id="producto"required class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">
+                            <input id="id" required type="hidden" name="id">
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="cantidad">Cantidad</label>
-                            <input id="cantidad" class="form-control" type="text" name="cantidad" placeholder="Cantidad" onkeyup="calcularPrecio(event)">
+                            <input id="cantidad" required class="form-control" type="text" name="cantidad" placeholder="Cantidad" onkeyup="calcularPrecio(event)">
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="precio">Precio</label>
-                            <input id="precio" class="form-control" type="text" name="precio" placeholder="precio" disabled>
+                            <input id="precio" required class="form-control" type="text" name="precio" placeholder="precio" disabled>
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="sub_total">Sub Total</label>
-                            <input id="sub_total" class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
+                            <input id="sub_total"required class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
                         </div>
                     </div>
                 </div>

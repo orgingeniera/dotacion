@@ -93,27 +93,27 @@ include_once "includes/header.php";
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="codigo" class=" text-dark font-weight-bold"><i class="fas fa-barcode"></i> Nombre</label>
-                                <input type="text" placeholder="Ingrese nombre del producto" name="codigo" id="codigo" class="form-control">
-                                <input type="hidden" id="id" name="id">
+                                <label for="codigo"requred  class=" text-dark font-weight-bold"><i class="fas fa-barcode"></i> Nombre</label>
+                                <input type="text"required  placeholder="Ingrese nombre del producto" name="codigo" id="codigo" class="form-control">
+                                <input type="hidden"required  id="id" name="id">
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="producto" class=" text-dark font-weight-bold">Talla</label>
-                                <input type="text" placeholder="Ingrese la talla" name="producto" id="producto" class="form-control">
+                                <input type="text"required placeholder="Ingrese la talla" name="producto" id="producto" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="precio" class=" text-dark font-weight-bold">Precio</label>
-                                <input type="text" placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
+                                <input type="text"required placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="cantidad" class=" text-dark font-weight-bold">Cantidad</label>
-                                <input type="number" placeholder="Ingrese cantidad" class="form-control" name="cantidad" id="cantidad">
+                                <input type="number"required placeholder="Ingrese cantidad" class="form-control" name="cantidad" id="cantidad">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -133,8 +133,8 @@ include_once "includes/header.php";
                         </div>
                         </div>
                             <div class="col-md-6">
-                                <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-                                <input type="button" value="Nuevo" onclick="limpiar()" class="btn btn-success" id="btnNuevo">
+                                <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
+                                <input type="button" required value="Nuevo" onclick="limpiar()" class="btn btn-success" id="btnNuevo">
                             </div>
                     </div>
 

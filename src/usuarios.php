@@ -101,34 +101,34 @@ include "includes/header.php";
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" placeholder="Ingrese Nombre" name="nombre" id="nombre">
-                        <input type="hidden" id="id" name="id">
+                        <input type="text" required class="form-control" placeholder="Ingrese Nombre" name="nombre" id="nombre">
+                        <input type="hidden"required id="id" name="id">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="correo">Correo</label>
-                        <input type="email" class="form-control" placeholder="Ingrese Correo Electrónico" name="correo" id="correo">
+                        <input type="email"required class="form-control" placeholder="Ingrese Correo Electrónico" name="correo" id="correo">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="usuario">Usuario</label>
-                        <input type="text" class="form-control" placeholder="Ingrese Usuario" name="usuario" id="usuario">
+                        <input type="text" required class="form-control" placeholder="Ingrese Usuario" name="usuario" id="usuario">
                     </div>
 
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="clave">Contraseña</label>
-                        <input type="password" class="form-control" placeholder="Ingrese Contraseña" name="clave" id="clave">
+                        <input type="password" required class="form-control" placeholder="Ingrese Contraseña" name="clave" id="clave">
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+            <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
+            <input type="button"required  value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
         </form>
     </div>
 </div>

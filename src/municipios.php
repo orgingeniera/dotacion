@@ -92,14 +92,14 @@ include_once "includes/header.php";
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="nombre" class="text-dark font-weight-bold">Nombre</label>
-                                <input type="text" placeholder="Ingrese Nombre del Municipio" name="nombre" id="nombre" class="form-control">
-                                <input type="hidden" id="id" name="id">
+                                <label for="nombre"required class="text-dark font-weight-bold">Nombre</label>
+                                <input type="text" required placeholder="Ingrese Nombre del Municipio" name="nombre" id="nombre" class="form-control">
+                                <input type="hidden"required id="id" name="id">
                             </div>
                         </div>
                         <div class="col-md-4 mt-3">
-                            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-                            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+                            <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
+                            <input type="button"required value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                         </div>
                     </div>
                 </form>
