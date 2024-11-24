@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 require_once "../conexion.php";
 $id_user = $_SESSION['idUser'];
 $permiso = "configuracion";
@@ -11,9 +12,9 @@ if (empty($existe) && $id_user != 1) {
 $query = mysqli_query($conexion, "SELECT * FROM configuracion");
 $data = mysqli_fetch_assoc($query);
 if ($_POST) {
-    $alert = '';
+    
     if (empty($_POST['nombre']) || empty($_POST['telefono']) || empty($_POST['email']) || empty($_POST['direccion'])) {
-        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         Todo los campos son obligatorios
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -34,7 +35,10 @@ if ($_POST) {
                         </button>
                     </div>';
         }
-    }
+    }   mysqli_close($conexion);
+    // Redirige después de procesar el formulario
+    header("Location: config.php"); 
+    exit;
 }
 include_once "includes/header.php";
 ?>
@@ -46,7 +50,12 @@ include_once "includes/header.php";
                 <h4 class="card-title">Datos de la Empresa</h4>
             </div>
             <div class="card-body">
-                <?php echo isset($alert) ? $alert : ''; ?>
+            <?php 
+                if (isset($_SESSION['alert'])) {
+                    echo $_SESSION['alert'];
+                    unset($_SESSION['alert']);
+                }
+                ?>
                 <form action="" method="post" class="p-3">
                     <div class="form-group">
                         <label>Nombre:</label>

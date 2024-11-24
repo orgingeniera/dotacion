@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 include "../conexion.php";
 $id_user = $_SESSION['idUser'];
 $permiso = "productos";
@@ -9,7 +10,7 @@ if (empty($existe) && $id_user != 1) {
     header('Location: permisos.php');
 }
 if (!empty($_POST)) {
-    $alert = "";
+
     $id = $_POST['id'];
     $codigo = $_POST['codigo'];
     $producto = $_POST['producto'];
@@ -18,7 +19,7 @@ if (!empty($_POST)) {
     $id_categoria = $_POST['id_categoria'];
   
     if (empty($codigo) || empty($producto) || empty($cantidad) || $cantidad <  0) {
-        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        $_SESSION['alert'] = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         Todo los campos son obligatorios
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -29,7 +30,7 @@ if (!empty($_POST)) {
             $query = mysqli_query($conexion, "SELECT * FROM producto WHERE codigo = '$codigo'");
             $result = mysqli_fetch_array($query);
             if ($result > 0) {
-                $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         El codigo ya existe
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -38,14 +39,14 @@ if (!empty($_POST)) {
             } else {
                 $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria) values ('$codigo', '$producto', '$precio', '$cantidad', '$id_categoria')");
                 if ($query_insert) {
-                    $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto registrado
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
                 } else {
-                    $alert = '<div class="alert alert-danger" role="alert">
+                    $_SESSION['alert'] = '<div class="alert alert-danger" role="alert">
                     Error al registrar el producto
                   </div>';
                 }
@@ -53,14 +54,14 @@ if (!empty($_POST)) {
         } else {
             $query_update = mysqli_query($conexion, "UPDATE producto SET codigo = '$codigo', descripcion = '$producto', precio= $precio, existencia = $cantidad, id_categoria=$id_categoria WHERE codproducto = $id");
             if ($query_update) {
-                $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto Modificado
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
             } else {
-                $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         Error al modificar
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -69,7 +70,13 @@ if (!empty($_POST)) {
             }
         }
     }
+    mysqli_close($conexion);
+    // Redirige después de procesar el formulario
+    header("Location: productos.php"); 
+    exit;
+    
 }
+
 include_once "includes/header.php";
 ?>
 <div class="card shadow-lg">
@@ -77,7 +84,12 @@ include_once "includes/header.php";
         <div class="row">
             <div class="col-md-12">
                 <form action="" method="post" autocomplete="off" id="formulario">
-                    <?php echo isset($alert) ? $alert : ''; ?>
+                <?php 
+                if (isset($_SESSION['alert'])) {
+                    echo $_SESSION['alert'];
+                    unset($_SESSION['alert']);
+                }
+                ?>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
