@@ -12,5 +12,5 @@ if (!empty($_GET['id'])) {
     $id = $_GET['id'];
     $query_delete = mysqli_query($conexion, "DELETE FROM cliente WHERE idcliente = $id");
     mysqli_close($conexion);
-    header("Location: clientes.php");
+    header("Location: docentes.php");
 }
