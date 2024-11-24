@@ -48,7 +48,8 @@
 <script src="../assets/js/sweetalert2.all.min.js"></script>
 <script src="../assets/js/jquery-ui/jquery-ui.min.js"></script>
 <script src="../assets/js/chart.min.js"></script>
-<script src="../assets/js/funciones.js"></script>
+<script src="../assets/js/funciones.js?v=1.0.1"></script>
+
 </body>
 
 </html>

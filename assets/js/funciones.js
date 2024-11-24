@@ -459,9 +459,8 @@ function btnCambiar(e) {
         });
     }
 }
-
-function editarCliente(id) {
-   const action = "editarCliente";
+function editarClientess(id) {
+    const action = "editarCliente";
     $.ajax({
         url: 'ajax.php',
         type: 'GET',
@@ -472,40 +471,34 @@ function editarCliente(id) {
         },
         success: function (response) {
             const datos = JSON.parse(response);
+
             $('#nombre').val(datos.nombre);
             $('#documento').val(datos.documento);
-            $('#municipio').val(datos.municipio);
+            $('#id_municipios').val(datos.id_municipios);
+            $('#sexo').val(datos.sexo);
+            $('#tipo_funcionario').val(datos.tipo_funcionario);
+            $('#dotacion').val(datos.dotacion);
+            $('#bono').val(datos.bono);
             $('#id').val(datos.idcliente);
-            $('#btnAccion').val('Modificar');
+
+            // Cargar colegios del municipio seleccionado
+            fetch(`get_colegios.php?id_municipios=${datos.id_municipios}`)
+                .then(response => response.json())
+                .then(data => {
+                    let options = '<option value="">Seleccione un colegio</option>';
+                    data.forEach(colegio => {
+                        options += `<option value="${colegio.id_colegios}">${colegio.nombre}</option>`;
+                    });
+                    $('#id_colegio').html(options);
+                    $('#id_colegio').val(datos.id_colegio);
+                })
+                .catch(error => console.error('Error:', error));
         },
         error: function (error) {
             console.log(error);
-
         }
     });
 }
-function editarCategoria(id) {
-    const action = "editarCategoria";
-     $.ajax({
-         url: 'ajax.php',
-         type: 'GET',
-         async: true,
-         data: {
-            editarCategoria: action,
-             id: id
-         },
-         success: function (response) {
-             const datos = JSON.parse(response);
-             $('#nombre').val(datos.nombre);           
-             $('#id').val(datos.id_categoria );
-             $('#btnAccion').val('Modificar');
-         },
-         error: function (error) {
-             console.log(error);
- 
-         }
-     });
- }
 function editarProveedor(id) {
 
     const action = "editarProveedor";
