@@ -4,12 +4,12 @@ session_start();
 if (isset($_GET['q'])) {
     $datos = array();
     $nombre = $_GET['q'];
-    $cliente = mysqli_query($conexion, "SELECT * FROM cliente WHERE nombre LIKE '%$nombre%'");
+    $cliente = mysqli_query($conexion, "SELECT * FROM cliente WHERE documento LIKE '%$nombre%'");
     while ($row = mysqli_fetch_assoc($cliente)) {
         $data['id'] = $row['idcliente'];
         $data['label'] = $row['nombre'];
-        $data['direccion'] = $row['direccion'];
-        $data['telefono'] = $row['telefono'];
+        $data['dotacion'] = $row['dotacion'];
+        $data['documento'] = $row['documento'];
         array_push($datos, $data);
     }
     echo json_encode($datos);
@@ -17,28 +17,27 @@ if (isset($_GET['q'])) {
 }else if (isset($_GET['pro'])) {
     $datos = array();
     $nombre = $_GET['pro'];
-    $producto = mysqli_query($conexion, "SELECT * FROM producto WHERE codigo LIKE '%" . $nombre . "%' OR descripcion LIKE '%" . $nombre . "%'");
-    while ($row = mysqli_fetch_assoc($producto)) {
+    $producto = mysqli_query($conexion, "SELECT * FROM producto WHERE codproducto = $nombre ");
+    if ($row = mysqli_fetch_assoc($producto)) {
         $data['id'] = $row['codproducto'];
-        $data['label'] = $row['codigo'] . ' - ' .$row['descripcion'];
-        $data['value'] = $row['descripcion'];
-        $data['precio'] = $row['precio'];
         $data['existencia'] = $row['existencia'];
-        array_push($datos, $data);
+        echo json_encode($data);
+    } else {
+        echo json_encode(null); // No se encontró ningún producto
     }
-    echo json_encode($datos);
     die();
 }else if (isset($_GET['detalle'])) {
     $id = $_SESSION['idUser'];
     $datos = array();
-    $detalle = mysqli_query($conexion, "SELECT d.*, p.codproducto, p.descripcion FROM detalle_temp d INNER JOIN producto p ON d.id_producto = p.codproducto WHERE d.id_usuario = $id");
+    $detalle = mysqli_query($conexion, "SELECT d.*, p.codproducto, p.codigo, p.descripcion FROM detalle_temp d INNER JOIN producto p ON d.id_producto = p.codproducto WHERE d.id_usuario = $id");
     while ($row = mysqli_fetch_assoc($detalle)) {
         $data['id'] = $row['id'];
-        $data['descripcion'] = $row['descripcion'];
+        $data['descripcion'] = $row['codigo'];
         $data['cantidad'] = $row['cantidad'];
-        $data['descuento'] = $row['descuento'];
+        $data['talla'] = $row['descripcion'];
+       /* $data['descuento'] = $row['descuento'];
         $data['precio_venta'] = $row['precio_venta'];
-        $data['sub_total'] = $row['total'];
+        $data['sub_total'] = $row['total'];*/
         array_push($datos, $data);
     }
     echo json_encode($datos);
@@ -153,9 +152,9 @@ else if (isset($_GET['editarColegio'])) {
 if (isset($_POST['regDetalle'])) {
     $id = $_POST['id'];
     $cant = $_POST['cant'];
-    $precio = $_POST['precio'];
+    $precio = $_POST['stock'];
     $id_user = $_SESSION['idUser'];
-    $total = $precio * $cant;
+    $total =   $cant - $precio;
     $verificar = mysqli_query($conexion, "SELECT * FROM detalle_temp WHERE id_producto = $id AND id_usuario = $id_user");
     $result = mysqli_num_rows($verificar);
     $datos = mysqli_fetch_assoc($verificar);

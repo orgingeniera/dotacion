@@ -10,6 +10,9 @@ if (empty($existe) && $id_user != 1) {
 }
 include_once "includes/header.php";
 ?>
+<!--Para el select2-->
+ <script src="../assets/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="form-group">
@@ -22,20 +25,25 @@ include_once "includes/header.php";
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input type="hidden" id="idcliente" value="1" name="idcliente" required>
-                                <label>Nombre</label>
-                                <input type="text" required name="nom_cliente" id="nom_cliente" class="form-control" placeholder="Ingrese nombre del cliente" required>
-                            </div>
+
+                                <label>Documento</label>
+                                 <input type="text" name="documentos" id="documentos" class="form-control" placeholder="Ingrese Cedula del docente" required>
+                                </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Teléfono</label>
-                                <input type="number"required name="tel_cliente" id="tel_cliente" class="form-control" disabled required>
-                            </div>
+                                <label>Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control" disabled required>
+                    </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Dirreción</label>
-                                <input type="text" required name="dir_cliente" id="dir_cliente" class="form-control" disabled required>
+
+                                <select name="dotaciones" id="dotaciones">
+
+                                </select>
+
                             </div>
                         </div>
                     </div>
@@ -47,12 +55,21 @@ include_once "includes/header.php";
                 Buscar Productos
             </div>
             <div class="card-body">
+            
                 <div class="row">
                     <div class="col-lg-5">
                         <div class="form-group">
                             <label for="producto">Código o Nombre</label>
+
+                            <select class="js-example-basic-single"id="producto"  name="producto"  name="states[]" style="width: 50%;">
+                                
+                            </select>
+                         <!--   <input id="producto" class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">-->
+                            <input id="id" type="hidden" name="id">
+
                             <input id="producto"required class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">
                             <input id="id" required type="hidden" name="id">
+
                         </div>
                     </div>
                     <div class="col-lg-2">
@@ -63,14 +80,18 @@ include_once "includes/header.php";
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="precio">Precio</label>
-                            <input id="precio" required class="form-control" type="text" name="precio" placeholder="precio" disabled>
+
+                            <label for="stock">Stock</label>
+                            <input  type="text" id="stock" class="form-control" name="stock" placeholder="stock" disabled>
+                    
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="sub_total">Sub Total</label>
-                            <input id="sub_total"required class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
+
+                            <label for="sub_total">Stock futuro</label>
+                            <input id="sub_total" class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
+
                         </div>
                     </div>
                 </div>
@@ -82,12 +103,9 @@ include_once "includes/header.php";
                 <thead class="thead-dark">
                     <tr>
                         <th>Id</th>
-                        <th>Descripción</th>
+                        <th>Producto</th>
                         <th>Cantidad</th>
-                        <th>Aplicar</th>
-                        <th>Desc</th>
-                        <th>Precio</th>
-                        <th>Precio Total</th>
+                        <th>Tallas</th>
                         <th>Accion</th>
                     </tr>
                 </thead>
@@ -109,4 +127,30 @@ include_once "includes/header.php";
     </div>
 
 </div>
+<script>
+ $(document).ready(function() {
+  // Inicializar Select2
+  $('.js-example-basic-single').select2({
+            placeholder: "Selecciona un estado", // Texto de ayuda
+            allowClear: true // Permite limpiar la selección
+        });
+});
+
+$.ajax({
+        url: "get_productos.php", // Endpoint que devuelve los productos
+        dataType: "json",
+        success: function (productos) {
+            // Limpiar y llenar el select con las opciones
+            $('#producto').empty();
+            $('#producto').append('<option value="">Seleccione un producto</option>');
+            productos.forEach(function (producto) {
+                $('#producto').append('<option value="' + producto.codproducto + '">' + producto.codproducto+"-"+producto.codigo + '</option>');
+            });
+        },
+        error: function () {
+            alert("Error al cargar los productos.");
+        }
+    });
+</script>
+
 <?php include_once "includes/footer.php"; ?>

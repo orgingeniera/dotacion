@@ -22,48 +22,67 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
     })
-    $("#nom_cliente").autocomplete({
-        minLength: 3,
-        source: function (request, response) {
+    $("#documentos").on('keypress', function (e) {
+        if (e.which === 13) { // 13 es el código de la tecla Enter
+            var documento = $(this).val(); // Obtiene el valor del campo de texto
+    
+            // Realiza la solicitud Ajax solo cuando se presiona Enter
             $.ajax({
-                url: "ajax.php",
+                url: "ajax.php", // El archivo PHP que va a manejar la solicitud
                 dataType: "json",
                 data: {
-                    q: request.term
+                    q: documento // Se pasa el valor del campo 'documento' a la consulta
                 },
                 success: function (data) {
-                    response(data);
+                    // Verifica si la respuesta contiene datos
+                    if (data.length > 0) {
+                        var ui = data[0]; // Usamos el primer resultado, puedes ajustar si es necesario
+                        $("#idcliente").val(ui.id);
+                        $("#nombre").val(ui.label);
+                        $("#documento").val(ui.documento);
+                        $("#dotaciones").empty();
+                        // Agregar las opciones al select con los valores de dotación
+                        data.forEach(function(item) {
+                            // Agregar cada opción al select
+                            $("#dotaciones").append(new Option('Dotación ' + item.dotacion, item.dotacion));
+                        });
+                       
+                    } else {
+                        alert("No se encontró ningún resultado.");
+                    }
                 }
             });
-        },
-        select: function (event, ui) {
-            $("#idcliente").val(ui.item.id);
-            $("#nom_cliente").val(ui.item.label);
-            $("#tel_cliente").val(ui.item.telefono);
-            $("#dir_cliente").val(ui.item.direccion);
         }
-    })
-    $("#producto").autocomplete({
-        minLength: 3,
-        source: function (request, response) {
+    });
+    
+    $('#producto').on('change', function () {
+        var codigoProducto = $(this).val(); // Obtener el valor seleccionado
+        if (codigoProducto) {
+       
+            // Realizar solicitud Ajax para buscar los datos del producto
             $.ajax({
-                url: "ajax.php",
+                url: "ajax.php", // Endpoint para buscar detalles del producto
                 dataType: "json",
                 data: {
-                    pro: request.term
+                    pro: codigoProducto // Enviar el código del producto seleccionado
                 },
                 success: function (data) {
-                    response(data);
+                 
+                    if (data) {
+                        $("#id").val(data.id);
+                        $("#stock").val(data.existencia);
+                        $("#cantidad").focus();
+                    } else {
+                        alert("No se encontró ningún producto con ese código.");
+                    }
+                },
+                error: function () {
+                    alert("Error al buscar los datos del producto.");
                 }
             });
-        },
-        select: function (event, ui) {
-            $("#id").val(ui.item.id);
-            $("#producto").val(ui.item.value);
-            $("#precio").val(ui.item.precio);
-            $("#cantidad").focus();
         }
-    })
+    });
+    
 
     $('#btn_generar').click(function (e) {
         e.preventDefault();
@@ -125,13 +144,13 @@ document.addEventListener("DOMContentLoaded", function () {
 function calcularPrecio(e) {
     e.preventDefault();
     const cant = $("#cantidad").val();
-    const precio = $('#precio').val();
-    const total = cant * precio;
+    const stock = $('#stock').val();
+    const total = stock - cant;
     $('#sub_total').val(total);
     if (e.which == 13) {
         if (cant > 0 && cant != '') {
             const id = $('#id').val();
-            registrarDetalle(e, id, cant, precio);
+            registrarDetalle(e, id, cant, stock);
             $('#producto').focus();
         } else {
             $('#cantidad').focus();
@@ -185,12 +204,7 @@ function listar() {
                 <td>${row['id']}</td>
                 <td>${row['descripcion']}</td>
                 <td>${row['cantidad']}</td>
-                <td width="100">
-                <input class="form-control" placeholder="Desc" type="number" onkeyup="calcularDescuento(event, ${row['id']})">
-                </td>
-                <td>${row['descuento']}</td>
-                <td>${row['precio_venta']}</td>
-                <td>${row['sub_total']}</td>
+                <td>${row['talla']}</td>
                 <td><button class="btn btn-danger" type="button" onclick="deleteDetalle(${row['id']})">
                 <i class="fas fa-trash-alt"></i></button></td>
                 </tr>`;
@@ -201,7 +215,7 @@ function listar() {
     });
 }
 
-function registrarDetalle(e, id, cant, precio) {
+function registrarDetalle(e, id, cant, stock) {
     if (document.getElementById('producto').value != '') {
         if (id != null) {
             let action = 'regDetalle';
@@ -213,13 +227,13 @@ function registrarDetalle(e, id, cant, precio) {
                     id: id,
                     cant: cant,
                     regDetalle: action,
-                    precio: precio
+                    stock: stock
                 },
                 success: function (response) {
 
                     if (response == 'registrado') {
                         $('#cantidad').val('');
-                        $('#precio').val('');
+                        $('#stock').val('');
                         $("#producto").val('');
                         $("#sub_total").val('');
                         $("#producto").focus();
@@ -233,7 +247,7 @@ function registrarDetalle(e, id, cant, precio) {
                         })
                     } else if (response == 'actualizado') {
                         $('#cantidad').val('');
-                        $('#precio').val('');
+                        $('#stock').val('');
                         $("#producto").val('');
                         $("#producto").focus();
                         listar();

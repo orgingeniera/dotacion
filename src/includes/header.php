@@ -14,10 +14,12 @@ if (empty($_SESSION['active'])) {
     <meta name="author" content="" />
     <title>Panel de Administración</title>
     <link href="../assets/css/material-dashboard.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <link href="../assets/css/select2.css" rel="stylesheet" />
 
-    <link href="../assets/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+     <link href="../assets/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <link rel="stylesheet" href="../assets/js/jquery-ui/jquery-ui.min.css">
+    <script src="../assets/js/selec2.min.js" crossorigin="anonymous"></script>
     <script src="../assets/js/all.min.js" crossorigin="anonymous"></script>
 <style>
     /* Fondo personalizado para el menú desplegable */
