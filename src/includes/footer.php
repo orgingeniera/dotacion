@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>
-<script src="../assets/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="../assets/js/jquery-3.6.0.min.js?v=1.0.4" crossorigin="anonymous"></script>
 <script src="../assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="../assets/js/material-dashboard.js" type="text/javascript"></script>
 <script src="../assets/js/bootstrap-notify.js"></script>
@@ -48,7 +48,10 @@
 <script src="../assets/js/sweetalert2.all.min.js"></script>
 <script src="../assets/js/jquery-ui/jquery-ui.min.js"></script>
 <script src="../assets/js/chart.min.js"></script>
-<script src="../assets/js/funciones.js?v=1.0.1"></script>
+   <!-- Cargar JS de Select2 después de jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="../assets/js/funciones.js?v=1.0.5"></script>
 
 </body>
 
