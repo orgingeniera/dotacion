@@ -25,6 +25,7 @@ include_once "includes/header.php";
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input type="hidden" id="idcliente" value="1" name="idcliente" required>
+
                                 <label>Documento</label>
                                  <input type="text" name="documentos" id="documentos" class="form-control" placeholder="Ingrese Cedula del docente" required>
                                 </div>
@@ -33,15 +34,16 @@ include_once "includes/header.php";
                             <div class="form-group">
                                 <label>Nombre</label>
                                 <input type="text" name="nombre" id="nombre" class="form-control" disabled required>
-                            </div>
+                    </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Dirreción</label>
+
                                 <select name="dotaciones" id="dotaciones">
 
                                 </select>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -58,29 +60,38 @@ include_once "includes/header.php";
                     <div class="col-lg-5">
                         <div class="form-group">
                             <label for="producto">Código o Nombre</label>
+
                             <select class="js-example-basic-single"id="producto"  name="producto"  name="states[]" style="width: 50%;">
                                 
                             </select>
                          <!--   <input id="producto" class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">-->
                             <input id="id" type="hidden" name="id">
+
+                            <input id="producto"required class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">
+                            <input id="id" required type="hidden" name="id">
+
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="cantidad">Cantidad</label>
-                            <input id="cantidad" class="form-control" type="text" name="cantidad" placeholder="Cantidad" onkeyup="calcularPrecio(event)">
+                            <input id="cantidad" required class="form-control" type="text" name="cantidad" placeholder="Cantidad" onkeyup="calcularPrecio(event)">
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
+
                             <label for="stock">Stock</label>
                             <input  type="text" id="stock" class="form-control" name="stock" placeholder="stock" disabled>
+                    
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
+
                             <label for="sub_total">Stock futuro</label>
                             <input id="sub_total" class="form-control" type="text" name="sub_total" placeholder="Sub Total" disabled>
+
                         </div>
                     </div>
                 </div>

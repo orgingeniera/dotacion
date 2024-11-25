@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Cache-Control: no-cache, must-revalidate");
 include "../conexion.php";
 
 $id_user = $_SESSION['idUser'];
@@ -11,9 +12,8 @@ if (empty($existe) && $id_user != 1) {
 }
 
 if (!empty($_POST)) {
-    $alert = "";
     if (empty($_POST['nombre'])) {
-        $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        $_SESSION['alert'] =  '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         El nombre de la categoría es obligatorio
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -28,7 +28,7 @@ if (!empty($_POST)) {
             $query = mysqli_query($conexion, "SELECT * FROM categoria WHERE nombre = '$nombre'");
             $result = mysqli_fetch_array($query);
             if ($result > 0) {
-                $alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] =   '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                         La categoría ya existe
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -37,14 +37,14 @@ if (!empty($_POST)) {
             } else {
                 $query_insert = mysqli_query($conexion, "INSERT INTO categoria(nombre) VALUES ('$nombre')");
                 if ($query_insert) {
-                    $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] =  '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Categoría registrada
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
                 } else {
-                    $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    $_SESSION['alert'] =  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Error al registrar la categoría
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -55,14 +55,14 @@ if (!empty($_POST)) {
         } else {
             $sql_update = mysqli_query($conexion, "UPDATE categoria SET nombre = '$nombre' WHERE id_categoria = $id_categoria");
             if ($sql_update) {
-                $alert = '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] = '<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Categoría modificada
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>';
             } else {
-                $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                $_SESSION['alert'] =  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Error al modificar la categoría
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -72,6 +72,10 @@ if (!empty($_POST)) {
         }
     }
     mysqli_close($conexion);
+    // Redirige después de procesar el formulario
+    header("Location: categorias.php"); 
+    exit;
+
 }
 include_once "includes/header.php";
 ?>
@@ -79,19 +83,24 @@ include_once "includes/header.php";
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
-                <?php echo (isset($alert)) ? $alert : ''; ?>
+            <?php 
+                if (isset($_SESSION['alert'])) {
+                    echo $_SESSION['alert'];
+                    unset($_SESSION['alert']);
+                }
+                ?>
                 <form action="" method="post" autocomplete="off" id="formulario">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nombre" class="text-dark font-weight-bold">Nombre de la Categoría</label>
-                                <input type="text" placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control">
-                                <input type="hidden" name="id" id="id">
+                                <input type="text" required placeholder="Ingrese Nombre" name="nombre" id="nombre" class="form-control">
+                                <input type="hidden" required name="id" id="id">
                             </div>
                         </div>
                         <div class="col-md-6 mt-3">
-                            <input type="submit" value="Registrar" class="btn btn-primary" id="btnAccion">
-                            <input type="button" value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
+                            <input type="submit" required value="Registrar" class="btn btn-primary" id="btnAccion">
+                            <input type="button" required value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
                         </div>
                     </div>
                 </form>
