@@ -16,7 +16,7 @@ include_once "includes/header.php";
 <div class="row">
     <div class="col-lg-12">
         <div class="form-group">
-            <h4 class="text-center">Datos del Cliente</h4>
+            <h4 class="text-center">Datos del Docente</h4>
         </div>
         <div class="card">
             <div class="card-body">
@@ -38,9 +38,9 @@ include_once "includes/header.php";
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Dirreción</label>
+                                <label>Dotación</label>
 
-                                <select name="dotaciones" id="dotaciones">
+                                <select name="dotaciones" id="dotaciones"  class="form-control">
 
                                 </select>
 
@@ -61,14 +61,12 @@ include_once "includes/header.php";
                         <div class="form-group">
                             <label for="producto">Código o Nombre</label>
 
-                            <select class="js-example-basic-single"id="producto"  name="producto"  name="states[]" style="width: 50%;">
+                            <select class="js-example-basic-single" id="producto"  name="producto"  name="states[]" style="width: 50%;">
                                 
                             </select>
                          <!--   <input id="producto" class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">-->
                             <input id="id" type="hidden" name="id">
-
-                            <input id="producto"required class="form-control" type="text" name="producto" placeholder="Ingresa el código o nombre">
-                            <input id="id" required type="hidden" name="id">
+     
 
                         </div>
                     </div>
@@ -129,9 +127,10 @@ include_once "includes/header.php";
 </div>
 <script>
  $(document).ready(function() {
+    borrarTemp()
   // Inicializar Select2
   $('.js-example-basic-single').select2({
-            placeholder: "Selecciona un estado", // Texto de ayuda
+            placeholder: "Selecciona un producto", // Texto de ayuda
             allowClear: true // Permite limpiar la selección
         });
 });

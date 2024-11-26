@@ -85,66 +85,142 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
     $('#btn_generar').click(function (e) {
+       
         e.preventDefault();
         var rows = $('#tblDetalle tr').length;
-        if (rows > 2) {
-            var action = 'procesarVenta';
-            var id = $('#idcliente').val();
-            $.ajax({
-                url: 'ajax.php',
-                async: true,
-                data: {
-                    procesarVenta: action,
-                    id: id
-                },
-                success: function (response) {
-
-                    const res = JSON.parse(response);
-                    if (response != 'error') {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Venta Generada',
-                            showConfirmButton: false,
-                            timer: 2000
-                        })
-                        setTimeout(() => {
-                            generarPDF(res.id_cliente, res.id_venta);
-                            location.reload();
-                        }, 300);
-                    } else {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'error',
-                            title: 'Error al generar la venta',
-                            showConfirmButton: false,
-                            timer: 2000
-                        })
+        if($('#documentos').val() == ""){
+            alert("Ingrese un docente por favor.")
+        }else{   
+        if (rows > 2) 
+        {
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "¡No podrás revertir esta acción!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, procesar venta",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, continuar con la lógica de procesar la venta
+                        var action = 'procesarVenta';
+                        var dotaciones = $('#dotaciones').val();
+                        var id = $('#idcliente').val();
+                        $.ajax({
+                            url: 'ajax.php',
+                            async: true,
+                            data: {
+                                procesarVenta: action,
+                                dotaciones: dotaciones,
+                                id: id
+                            },
+                            success: function (response) {
+                                const res = JSON.parse(response);
+                                if (res.mensaje != '1' && res.mensaje != '2') {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Venta Generada',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(() => {
+                                        generarPDF(res.id_cliente, res.id_venta);
+                                        location.reload();
+                                    }, 300);
+                                } else {
+                                    if (res.mensaje == '1') {
+                                        Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'error',
+                                            title: 'Error al generar la venta',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'error',
+                                            title: 'Esta dotación para este docente ya está ingresada',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+                                    }
+                                }
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    title: 'Error en la solicitud',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        });
                     }
-                },
-                error: function (error) {
+                });
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No hay producto para generar la venta',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
 
-                }
-            });
-        } else {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'warning',
-                title: 'No hay producto para generar la venta',
-                showConfirmButton: false,
-                timer: 2000
-            })
         }
+
     });
     if (document.getElementById("detalle_venta")) {
         listar();
     }
 })
 
+function borrarTemp() {
+    let borrartemp = 'borrartemp';
+    $.ajax({
+        url: "ajax.php",
+        type: 'GET',
+        dataType: "json",
+        data: {
+            borrartemp: borrartemp
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+              //  alert(response.message); // Mensaje opcional para confirmar
+                listar(); // Actualiza la lista
+            } else {
+              //  alert(response.message); // Mensaje de error
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error en la solicitud:', error);
+            alert('Ocurrió un error al eliminar el registro.');
+        }
+    });
+}
+
+
 function calcularPrecio(e) {
     e.preventDefault();
     const cant = $("#cantidad").val();
     const stock = $('#stock').val();
+    if (parseInt(cant) > parseInt(stock)) {
+        // Si la cantidad es mayor que el stock, mostrar mensaje
+        Swal.fire({
+            position: 'top-end',
+            icon: 'error', // Cambié el icono a 'error' para que sea más claro
+            title: 'La cantidad no puede ser mayor que la existencia del producto',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        $('#cantidad').focus(); // Volver a enfocar el campo cantidad
+        return false; // Detener la ejecución del resto del código
+    }
     const total = stock - cant;
     $('#sub_total').val(total);
     if (e.which == 13) {
@@ -217,6 +293,7 @@ function listar() {
 
 function registrarDetalle(e, id, cant, stock) {
     if (document.getElementById('producto').value != '') {
+       
         if (id != null) {
             let action = 'regDetalle';
             $.ajax({
@@ -243,7 +320,7 @@ function registrarDetalle(e, id, cant, stock) {
                             icon: 'success',
                             title: 'Producto Ingresado',
                             showConfirmButton: false,
-                            timer: 2000
+                            timer: 1000
                         })
                     } else if (response == 'actualizado') {
                         $('#cantidad').val('');
@@ -257,6 +334,19 @@ function registrarDetalle(e, id, cant, stock) {
                             title: 'Producto Actualizado',
                             showConfirmButton: false,
                             timer: 2000
+                        })
+                    }else if (response == 'errorexistencia') {
+                        $('#cantidad').val('');
+                        $('#stock').val('');
+                        $("#producto").val('');
+                        $("#producto").focus();
+                        listar();
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: ' La existencia disponible no es suficiente para la cantidad requerida.',
+                            showConfirmButton: false,
+                            timer: 4000
                         })
                     } else {
                         Swal.fire({
