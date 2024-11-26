@@ -51,7 +51,7 @@
    <!-- Cargar JS de Select2 después de jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script src="../assets/js/funciones.js?v=1.0.5"></script>
+<script src="../assets/js/funciones.js?v=3.0.7"></script>
 
 </body>
 
