@@ -57,6 +57,7 @@ if (isset($_GET['q'])) {
 } else if (isset($_GET['procesarVenta'])) {
     $id_cliente = $_GET['id'];
     $dotaciones = $_GET['dotaciones'];
+    $documentos = $_GET['documentos'];
     $id_user = $_SESSION['idUser'];
     $consultaValidacion = mysqli_query($conexion, "
        SELECT * FROM ventas 
@@ -92,6 +93,10 @@ if (isset($_GET['q'])) {
                 $stockNuevo = mysqli_fetch_assoc($stockActual);
                 $stockTotal = $stockNuevo['existencia'] - $cantidad;
                 $stock = mysqli_query($conexion, "UPDATE producto SET existencia = $stockTotal WHERE codproducto = $id_producto");
+                //actualizo el estado de la dotacion
+                $dotacion_entregadaActual = mysqli_query($conexion, "UPDATE cliente SET dotacion_entregada = 1 WHERE documento = $documentos AND dotacion='$dotaciones' AND  YEAR(fecha) = '$anio_actual'");
+                
+            
             } 
             if ($insertarDet) {
                 $eliminar = mysqli_query($conexion, "DELETE FROM detalle_temp WHERE id_usuario = $id_user");

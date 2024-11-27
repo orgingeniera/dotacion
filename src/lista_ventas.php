@@ -21,8 +21,8 @@ include_once "includes/header.php";
                 <thead class="thead-dark">
                     <tr>
                         <th>#</th>
-                        <th>Cliente</th>
-                        <th>Total</th>
+                        <th>Docente</th>
+                        <th>Dotación</th>
                         <th>Fecha</th>
                         <th></th>
                     </tr>
@@ -32,7 +32,7 @@ include_once "includes/header.php";
                         <tr>
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo $row['nombre']; ?></td>
-                            <td><?php echo $row['total']; ?></td>
+                            <td><?php echo $row['dataciones']; ?></td>
                             <td><?php echo $row['fecha']; ?></td>
                             <td>
                                 <a href="pdf/generar.php?cl=<?php echo $row['id_cliente'] ?>&v=<?php echo $row['id'] ?>" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>

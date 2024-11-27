@@ -87,6 +87,10 @@ if (empty($_SESSION['active'])) {
                             <i class="fab fa-product-hunt mr-2 fa-2x"></i>
                             <p> Colegios</p>
                              </a>
+                             <a class="nav-link d-flex" href="lista_docentes.php">
+                            <i class="fab fa-product-hunt mr-2 fa-2x"></i>
+                            <p> Reportes</p>
+                             </a>
                         </div>
                     </li>
 

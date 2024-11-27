@@ -108,12 +108,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         var action = 'procesarVenta';
                         var dotaciones = $('#dotaciones').val();
                         var id = $('#idcliente').val();
+                        var documentos = $('#documentos').val();
                         $.ajax({
                             url: 'ajax.php',
                             async: true,
                             data: {
                                 procesarVenta: action,
                                 dotaciones: dotaciones,
+                                documentos: documentos,
                                 id: id
                             },
                             success: function (response) {
