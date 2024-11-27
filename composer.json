@@ -1,0 +1,9 @@
+{
+    "name": "ogringenieria/dotacion",
+    "description": "Un sistema para gestionar dotaciones",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "phpoffice/phpspreadsheet": "^3.5"
+    }
+}
