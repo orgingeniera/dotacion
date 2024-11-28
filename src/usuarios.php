@@ -19,7 +19,8 @@ if (!empty($_POST)) {
     $nombre = $_POST['nombre'];
     $email = $_POST['correo'];
     $user = $_POST['usuario'];
-   
+    $tipo = $_POST['tipo'];
+
     if (empty($nombre) || empty($email) || empty($user)) {
         $_SESSION['alert'] ='<div class="alert alert-warning alert-dismissible fade show" role="alert">
                     Todo los campos son obligatorio
@@ -49,7 +50,7 @@ if (!empty($_POST)) {
                     </button>
                 </div>';
                 } else {
-                    $query_insert = mysqli_query($conexion, "INSERT INTO usuario(nombre,correo,usuario,clave) values ('$nombre', '$email', '$user', '$clave')");
+                    $query_insert = mysqli_query($conexion, "INSERT INTO usuario(nombre,correo,usuario,clave,tipo) values ('$nombre', '$email', '$user', '$clave','$tipo')");
                     if ($query_insert) {
                         $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                     Usuario Registrado
@@ -68,7 +69,7 @@ if (!empty($_POST)) {
                 }
             }
         } else {
-            $sql_update = mysqli_query($conexion, "UPDATE usuario SET nombre = '$nombre', correo = '$email' , usuario = '$user' WHERE idusuario = $id");
+            $sql_update = mysqli_query($conexion, "UPDATE usuario SET nombre = '$nombre', correo = '$email' , usuario = '$user', tipo='$tipo' WHERE idusuario = $id");
             if ($sql_update) {
                 $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                     Usuario Modificado
@@ -132,6 +133,18 @@ include "includes/header.php";
                     </div>
                 </div>
             </div>
+            <div class="row">
+            <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="clave">Tipo Usuario</label>
+                        <select name="tipo" required id="tipo" class="form-control">
+                        <option value="">Seleccione</option>
+                        <option value="1">Administrador</option>
+                        <option value="2">Vendedor</option>
+                    </select>
+                    </div>
+                </div>
+            </div>    
             <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
             <input type="button"required  value="Nuevo" class="btn btn-success" id="btnNuevo" onclick="limpiar()">
         </form>
@@ -161,11 +174,15 @@ include "includes/header.php";
                         <td><?php echo $data['correo']; ?></td>
                         <td><?php echo $data['usuario']; ?></td>
                         <td>
-                            <a href="rol.php?id=<?php echo $data['idusuario']; ?>" class="btn btn-warning"><i class='fas fa-key'></i></a>
+                          <!--Activa los permisos, los quite porque use otra cokie tipo para saber si es admin o no-->
+                           <!-- <a href="rol.php?id=<?php //echo $data['idusuario']; ?>" class="btn btn-warning"><i class='fas fa-key'></i></a>-->
                             <a href="#" onclick="editarUsuario(<?php echo $data['idusuario']; ?>)" class="btn btn-success"><i class='fas fa-edit'></i></a>
                             <form action="eliminar_usuario.php?id=<?php echo $data['idusuario']; ?>" method="post" class="confirmar d-inline">
                                 <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i> </button>
                             </form>
+                            <a href="ver_ventasUsuario.php?id_usuario=<?php echo $data['idusuario']; ?>" class="btn btn-warning">
+                                          Ventas
+                                        </a>
                         </td>
                     </tr>
             <?php }

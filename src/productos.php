@@ -42,7 +42,7 @@ if (!empty($_POST)) {
                         </button>
                     </div>';
             } else {
-                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria) values ('$codigo', '$producto', 0, '$cantidad', '$id_categoria')");
+                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria,fecha) values ('$codigo', '$producto', 0, '$cantidad', '$id_categoria',CURDATE())");
                 if ($query_insert) {
                     $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto registrado
@@ -144,8 +144,42 @@ include_once "includes/header.php";
                     </div>
 
                 </form>
-                
-                
+                <div class="text-center mt-4">
+                        <!-- Checkbox para mostrar/ocultar el contenido -->
+                        <div class="form-check form-switch d-inline-block">
+                            <input  type="checkbox" id="toggleContainer">
+                            <label for="toggleContainer">Insertar Masivamente</label>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor principal oculto por defecto -->
+                    <div class="container mt-5" id="mainContainer" style="display: none;">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card shadow">
+                                    <div class="card-header bg-primary text-white text-center">
+                                        <h3>Cargar Archivo Excel</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Formulario para cargar archivo -->
+                                        <form id="uploadForm" action="procesar_excel_productos.php" method="POST" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <label for="archivo" class="form-label">Seleccione el archivo Excel</label>
+                                                <input type="file" class="form-control" name="archivo" id="archivo" accept=".xlsx, .xls" required>
+                                                <small class="form-text text-muted">Solo se permiten archivos .xls y .xlsx.</small>
+                                            </div>
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-success">Cargar Datos</button>
+                                                <a href="../assets/archivos/productos.xlsx">Descargar plantilla</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                                
 
              
             </div>
@@ -201,6 +235,10 @@ include_once "includes/header.php";
     </div>
 </div>
 <script>
+    document.getElementById('toggleContainer').addEventListener('change', function() {
+            const container = document.getElementById('mainContainer');
+            container.style.display = this.checked ? 'block' : 'none';
+    });
     $(document).ready(function() {
         $('#categoria').select2({
             placeholder: "Seleccione una categoría",

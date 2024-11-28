@@ -25,10 +25,15 @@ if (!empty($_SESSION['active'])) {
                 $_SESSION['idUser'] = $dato['idusuario'];
                 $_SESSION['nombre'] = $dato['nombre'];
                 $_SESSION['user'] = $dato['usuario'];
-                header('Location: src/');
+                $_SESSION['tipo'] = $dato['tipo'];
+                if($dato['tipo'] == 1){
+                      header('Location: src/');
+                }else{
+                    header('Location: src/ventas.php');
+                }
             } else {
                 $alert = '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Contraseña incorrecta
+                        Usuario o contraseña incorrecta.
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -40,41 +45,91 @@ if (!empty($_SESSION['active'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-	<link rel="stylesheet" href="assets/css/material-dashboard.css">
-    <link rel="stylesheet" href="assets/css/estilos.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/material-dashboard.css">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+            
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .login-container .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .input-field:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .button input {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button input:hover {
+            background-color: #0056b3;
+        }
+        .checkbox-container {
+            text-align: center;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div style="display: flex;justify-content: space-between;">
-        <div class="container" style="display: none;">
-            <center><b class="title label mb-2">Login</b></center>
-            <form action="" id="login-form" method="POST">
-                <div class="user-details">
-                    <div class="input-box">
-                        <input type="text" class="input-field" name="usuario" id="usuario" placeholder="Usuario" autocomplete="off" required>
-                    </div>
-                    <div class="input-box">
-                        <input type="password" class="input-field" name="clave" id="clave" placeholder="Contraseña" autocomplete="off" required>
-                    </div>
-					<?php echo (isset($alert)) ? $alert : '' ; ?>
-                    <div class="button">
-                        <input type="submit" value="Login">
-                    </div>
-                </div>
-                <center>
-                    <input type="checkbox" id="toggle" onclick="changeMode();">
-                </center>
-            </form>
-        </div>
 
+    <div class="login-container">
+        <center><b class="title">Iniciar Sesión</b></center>
+        <form action="" id="login-form" method="POST">
+            <div class="user-details">
+                <div class="input-box">
+                    <input type="text" class="input-field" name="usuario" id="usuario" placeholder="Usuario" autocomplete="off" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" name="clave" id="clave" placeholder="Contraseña" autocomplete="off" required>
+                </div>
+                <?php echo (isset($alert)) ? $alert : '' ; ?>
+                <div class="button">
+                    <input type="submit" value="Login">
+                </div>
+            </div>
+        </form>
+        <div class="checkbox-container">
+           <!-- <input type="checkbox" id="toggle" onclick="changeMode();"> Cambiar Modo-->
+        </div>
     </div>
-	<script src="assets/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
-	<script src="assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script src="assets/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
     <script>
         var rootProp = document.documentElement.style;
@@ -103,6 +158,6 @@ if (!empty($_SESSION['active'])) {
             rootProp.setProperty("--labelColor", "rgb(255 255 255 / 59%)");
         }
     </script>
-</body>
 
+</body>
 </html>

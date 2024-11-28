@@ -52,17 +52,25 @@ if (empty($_SESSION['active'])) {
 <body>
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="black" data-image="../assets/img/sidebar-1.jpg">
-            <div class="logo"><a href="./" class="simple-text logo-normal">
+            <div class="logo"><a href="" class="simple-text logo-normal">
                     Dotacion Docente
                 </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
+                    <?php if($_SESSION['tipo'] == 1): ?>
+                        <li class="nav-item">
+                        <a class="nav-link d-flex" href="./">
+                            <i class="fas fa-user mr-2 fa-2x"></i>
+                            <p> Estadisticas</p>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex" href="usuarios.php">
                             <i class="fas fa-user mr-2 fa-2x"></i>
                             <p> Usuarios</p>
                         </a>
                     </li>
+                   
                     <li class="nav-item">
                         <a class="nav-link d-flex" href="config.php">
                             <i class="fas fa-cogs mr-2 fa-2x"></i>
@@ -93,32 +101,35 @@ if (empty($_SESSION['active'])) {
                              </a>
                         </div>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link d-flex" href="categorias.php">
-                            <i class=" fas fa-users mr-2 fa-2x"></i>
-                            <p> Categorias</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex" href="productos.php">
-                            <i class="fab fa-product-hunt mr-2 fa-2x"></i>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link d-flex dropdown-toggle" href="#" id="ventasMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cash-register mr-2 fa-2x"></i>
                             <p> Productos</p>
                         </a>
+                        <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="ventasMenu">
+                            <a class="dropdown-item custom-dropdown-item" href="productos.php">
+                                <i class="fas fa-cash-register mr-2"></i> Administra productos
+                            </a>
+                            <a class="dropdown-item custom-dropdown-item" href="categorias.php">
+                                <i class="fas fa-cart-plus mr-2"></i> Categorias
+                            </a>
+                        </div>
                     </li>
+                    <?php  endif ?>
+                  
                    
                     
                     <li class="nav-item dropdown">
                         <a class="nav-link d-flex dropdown-toggle" href="#" id="ventasMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-cash-register mr-2 fa-2x"></i>
-                            <p> Ventas</p>
+                            <p> Dotaciones</p>
                         </a>
                         <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="ventasMenu">
                             <a class="dropdown-item custom-dropdown-item" href="ventas.php">
-                                <i class="fas fa-cash-register mr-2"></i> Nueva Venta
+                                <i class="fas fa-cash-register mr-2"></i> Nueva Dotación
                             </a>
                             <a class="dropdown-item custom-dropdown-item" href="lista_ventas.php">
-                                <i class="fas fa-cart-plus mr-2"></i> Historial Ventas
+                                <i class="fas fa-cart-plus mr-2"></i> Historial Dotaciones
                             </a>
                         </div>
                     </li>
@@ -141,7 +152,7 @@ if (empty($_SESSION['active'])) {
                         <span class="navbar-toggler-icon icon-bar"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-end">
-
+                        <?php echo $_SESSION['nombre'];  ?>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
