@@ -2,7 +2,11 @@
 session_start();
 header("Cache-Control: no-cache, must-revalidate");
 include "../conexion.php";
-
+if (!isset($_SESSION['idUser'])) {
+    // Redirigir al usuario al index si no está definido
+    header("Location: index.php");
+    exit;
+}
 $id_user = $_SESSION['idUser'];
 $permiso = "categorias";
 $sql = mysqli_query($conexion, "SELECT p.*, d.* FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.nombre = '$permiso'");

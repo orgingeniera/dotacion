@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
-    $('#producto').on('change', function () {
+   /* $('#producto').on('change', function () {
         var codigoProducto = $(this).val(); // Obtener el valor seleccionado
         if (codigoProducto) {
        
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
-    });
+    });*/
     
 
     $('#btn_generar').click(function (e) {
@@ -452,7 +452,7 @@ if (document.getElementById("stockMinimo")) {
                 var nombre = [];
                 var cantidad = [];
                 for (var i = 0; i < data.length; i++) {
-                    nombre.push(data[i]['descripcion']);
+                    nombre.push(data[i]['codigo']);
                     cantidad.push(data[i]['existencia']);
                 }
                 var ctx = document.getElementById("stockMinimo");
@@ -488,7 +488,7 @@ if (document.getElementById("ProductosVendidos")) {
                 var nombre = [];
                 var cantidad = [];
                 for (var i = 0; i < data.length; i++) {
-                    nombre.push(data[i]['descripcion']);
+                    nombre.push(data[i]['codigo']);
                     cantidad.push(data[i]['cantidad']);
                 }
                 var ctx = document.getElementById("ProductosVendidos");

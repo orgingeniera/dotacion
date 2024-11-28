@@ -94,7 +94,7 @@ if (isset($_GET['q'])) {
                 $stockTotal = $stockNuevo['existencia'] - $cantidad;
                 $stock = mysqli_query($conexion, "UPDATE producto SET existencia = $stockTotal WHERE codproducto = $id_producto");
                 //actualizo el estado de la dotacion
-                $dotacion_entregadaActual = mysqli_query($conexion, "UPDATE cliente SET dotacion_entregada = 1 WHERE documento = $documentos AND dotacion='$dotaciones' AND  YEAR(fecha) = '$anio_actual'");
+                $dotacion_entregadaActual = mysqli_query($conexion, "UPDATE cliente SET dotacion_entregada = 1, fecha_entrega = CURDATE()  WHERE documento = $documentos AND dotacion='$dotaciones' AND  YEAR(fecha) = '$anio_actual'");
                 
             
             } 
