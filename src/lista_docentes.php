@@ -1,6 +1,11 @@
 <?php
 session_start();
 require_once "../conexion.php";
+if (!isset($_SESSION['idUser'])) {
+    // Redirigir al usuario al index si no está definido
+    header("Location: index.php");
+    exit;
+}
 $id_user = $_SESSION['idUser'];
 $permiso = "ventas";
 $sql = mysqli_query($conexion, "SELECT p.*, d.* FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.nombre = '$permiso'");
@@ -32,8 +37,8 @@ include_once "includes/header.php";
                 <label for="estado">Selecciona Estado:</label>
                 <select id="estado" class="form-control">
                     <option value="">Escaja Estado</option>
-                    <option value="dotado">Entregadas</option>
-                    <option value="sin_dotacion">Sin Entregar</option>
+                    <option value="true">Entregada</option>
+                    <option value="false">No Entregada</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -60,15 +65,47 @@ include_once "includes/header.php";
            </div>
                 
         
-            <div class="col-md-6">
+                    <!-- <div class="col-md-6">
             <label for="anio">Seleccione Año:</label>
                 <select id="anio" class="form-control">
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
-            </div>
+            </div>-->
             
 
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label class="font-weight-bold">Seleccione el tipo de consulta:</label>
+                <div>
+                    <input type="radio" id="radioAnio" name="tipoConsulta" value="anio" checked>
+                    <label for="radioAnio">Por Año</label>
+
+                    <input type="radio" id="radioIntervalo" name="tipoConsulta" value="intervalo">
+                    <label for="radioIntervalo">Por Intervalo de Fechas</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3" id="anio-container">
+            <div class="col-md-6">
+                <label for="anio">Seleccione Año:</label>
+                <select id="anio" class="form-control">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3 d-none" id="intervalo-container">
+            <div class="col-md-6">
+                <label for="fechaInicio">Fecha Inicio:</label>
+                <input type="date" id="fechaInicio" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="fechaFin">Fecha Fin:</label>
+                <input type="date" id="fechaFin" class="form-control">
+            </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-12 text-center">
@@ -163,83 +200,134 @@ include_once "includes/header.php";
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        const dotacion = document.getElementById('dotacion');
-        const estado = document.getElementById('estado');
-        const anio = document.getElementById('anio');
-        const idmunicipios = document.getElementById('id_municipios')
-        const idcolegio = document.getElementById('id_colegio')
-        const tablaCuerpo = document.getElementById('tabla-cuerpo');
+    const radioAnio = document.getElementById('radioAnio');
+    const radioIntervalo = document.getElementById('radioIntervalo');
+    const anioContainer = document.getElementById('anio-container');
+    const intervaloContainer = document.getElementById('intervalo-container');
 
-        const actualizarTabla = async () => {
-            const dotacionSeleccionada = dotacion.value;
-            const estadoSeleccionado = estado.value;
-            const anioSeleccionado = anio.value;
-            const idmunicipiosSelecionado = idmunicipios.value;
-            const idcolegioSelecionado = idcolegio.value;
-            // Realizar petición AJAX
-            const response = await fetch('filtrar_dotaciones.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    dotacion: dotacionSeleccionada,
-                    estado: estadoSeleccionado,
-                    anio: anioSeleccionado,
-                    idmunicipios: idmunicipiosSelecionado,
-                    idcolegio: idcolegioSelecionado
-                }),
-            });
-
-            const data = await response.text();
-            tablaCuerpo.innerHTML = data; // Rellenar la tabla
-        };
-
-        // Escuchar cambios en los select
-       /* dotacion.addEventListener('change', actualizarTabla);
-        estado.addEventListener('change', actualizarTabla);*/
-        btnActualizarTabla.addEventListener('click', actualizarTabla);
-        // Actualizar tabla al cargar la página
-        //actualizarTabla();
-    });
-    $(document).ready(function() {
-    // Función para el botón de exportar Excel
-    $('#btnExportarExcel').click(function() {
-    var dotacion = $('#dotacion').val();
-    var estado = $('#estado').val();
-    var id_municipios = $('#id_municipios').val();
-    var id_colegio = $('#id_colegio').val();
-    var anio = $('#anio').val();
-    
-
-    // Enviar datos por AJAX
-    $.ajax({
-        url: 'filtrar_dotaciones_excel.php', // Archivo PHP que genera el Excel
-        type: 'POST',
-        data: {
-            dotacion: dotacion,
-            estado: estado,
-            id_municipios: id_municipios,
-            id_colegio: id_colegio,
-            anio: anio
-        },
-        xhrFields: {
-            responseType: 'blob' // Aseguramos que la respuesta es de tipo Blob (archivo binario)
-        },
-        success: function(response) {
-            // Crear un enlace temporal para descargar el archivo Excel
-            var blob = response; // El objeto Blob recibido
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(blob); // Crea una URL para el archivo
-            link.download = 'reporte_dotaciones.xlsx'; // Nombre del archivo de descarga
-            link.click(); // Inicia la descarga
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al generar el Excel: " + error);
+    // Cambiar entre Año y Fecha según la selección
+    const toggleInputs = () => {
+        if (radioAnio.checked) {
+            anioContainer.classList.remove('d-none');
+            intervaloContainer.classList.add('d-none');
+        } else if (radioIntervalo.checked) {
+            intervaloContainer.classList.remove('d-none');
+            anioContainer.classList.add('d-none');
         }
+    };
+
+    // Listeners para los radios
+    radioAnio.addEventListener('change', toggleInputs);
+    radioIntervalo.addEventListener('change', toggleInputs);
+
+    // Inicializar estado al cargar
+    toggleInputs();
+
+    // Modificar la función actualizarTabla para enviar los datos correctos
+    const btnActualizarTabla = document.getElementById('btnActualizarTabla');
+    btnActualizarTabla.addEventListener('click', async () => {
+        const dotacion = document.getElementById('dotacion').value;
+        const estado = document.getElementById('estado').value;
+        const idmunicipios = document.getElementById('id_municipios').value;
+        const idcolegio = document.getElementById('id_colegio').value;
+        let anioSeleccionado = null;
+        let fechaInicio = null;
+        let fechaFin = null;
+
+        if (radioAnio.checked) {
+            anioSeleccionado = document.getElementById('anio').value;
+        } else if (radioIntervalo.checked) {
+          
+            fechaInicio = document.getElementById('fechaInicio').value;
+            fechaFin = document.getElementById('fechaFin').value;
+        }
+
+        // Validar datos antes de enviar
+        if (radioIntervalo.checked && (!fechaInicio || !fechaFin)) {
+            alert('Por favor, seleccione el intervalo de fechas.');
+            return;
+        }
+       console.log(`${dotacion} ${estado} ${idmunicipios} ${idcolegio} ${anioSeleccionado} ${fechaInicio} ${fechaFin}`)
+        // Realizar petición AJAX
+        const response = await fetch('filtrar_dotaciones.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                dotacion,
+                estado,
+                idmunicipios,
+                idcolegio,
+                anio: anioSeleccionado,
+                fechaInicio,
+                fechaFin
+            }),
+        });
+
+        const data = await response.text();
+        document.getElementById('tabla-cuerpo').innerHTML = data; // Rellenar la tabla
     });
 });
 
-});
+
+    $(document).ready(function() {
+        // Función para el botón de exportar Excel
+        $('#btnExportarExcel').click(function() {
+            const radioAnio = document.getElementById('radioAnio');
+            const radioIntervalo = document.getElementById('radioIntervalo');
+            let anioSeleccionado = null;
+            var fechaInicio = null;
+            var fechaFin = null;
+
+            if (radioAnio.checked) {
+                anioSeleccionado = document.getElementById('anio').value;
+            } else if (radioIntervalo.checked) {
+            console.log("entro")
+                fechaInicio = document.getElementById('fechaInicio').value;
+                fechaFin = document.getElementById('fechaFin').value;
+            }
+                // Validar datos antes de enviar
+            if (radioIntervalo.checked && (!fechaInicio || !fechaFin)) {
+                alert('Por favor, seleccione el intervalo de fechas.');
+                return;
+            }
+            var dotacion = $('#dotacion').val();
+            var estado = $('#estado').val();
+            var id_municipios = $('#id_municipios').val();
+            var id_colegio = $('#id_colegio').val();
+            //var anio = $('#anio').val();
+
+            // Enviar datos por AJAX
+            $.ajax({
+                url: 'filtrar_dotaciones_excel.php', // Archivo PHP que genera el Excel
+                type: 'POST',
+                data: {
+                    dotacion: dotacion,
+                    estado: estado,
+                    id_municipios: id_municipios,
+                    id_colegio: id_colegio,
+                    anio: anioSeleccionado,
+                    fechaInicio: fechaInicio,
+                    fechaFin: fechaFin
+                },
+                xhrFields: {
+                    responseType: 'blob' // Aseguramos que la respuesta es de tipo Blob (archivo binario)
+                },
+                success: function(response) {
+                    // Crear un enlace temporal para descargar el archivo Excel
+                    var blob = response; // El objeto Blob recibido
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob); // Crea una URL para el archivo
+                    link.download = 'reporte_dotaciones.xlsx'; // Nombre del archivo de descarga
+                    link.click(); // Inicia la descarga
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al generar el Excel: " + error);
+                }
+            });
+        });
+
+    });
 </script>
 <?php include_once "includes/footer.php"; ?>

@@ -1,6 +1,11 @@
 <?php
 session_start();
 header("Cache-Control: no-cache, must-revalidate");
+if (!isset($_SESSION['idUser'])) {
+    // Redirigir al usuario al index si no está definido
+    header("Location: index.php");
+    exit;
+}
 include "../conexion.php";
 $id_user = $_SESSION['idUser'];
 $permiso = "productos";
@@ -37,7 +42,7 @@ if (!empty($_POST)) {
                         </button>
                     </div>';
             } else {
-                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria) values ('$codigo', '$producto', '$precio', '$cantidad', '$id_categoria')");
+                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria) values ('$codigo', '$producto', 0, '$cantidad', '$id_categoria')");
                 if ($query_insert) {
                     $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto registrado
@@ -52,7 +57,7 @@ if (!empty($_POST)) {
                 }
             }
         } else {
-            $query_update = mysqli_query($conexion, "UPDATE producto SET codigo = '$codigo', descripcion = '$producto', precio= $precio, existencia = $cantidad, id_categoria=$id_categoria WHERE codproducto = $id");
+            $query_update = mysqli_query($conexion, "UPDATE producto SET codigo = '$codigo', descripcion = '$producto', precio= 0, existencia = $cantidad, id_categoria=$id_categoria WHERE codproducto = $id");
             if ($query_update) {
                 $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto Modificado
@@ -107,7 +112,7 @@ include_once "includes/header.php";
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="precio" class=" text-dark font-weight-bold">Precio</label>
-                                <input type="text"required placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
+                                <input type="text" value="0" readonly placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -133,12 +138,16 @@ include_once "includes/header.php";
                         </div>
                         </div>
                             <div class="col-md-6">
-                                <input type="submit"required value="Registrar" class="btn btn-primary" id="btnAccion">
-                                <input type="button" required value="Nuevo" onclick="limpiar()" class="btn btn-success" id="btnNuevo">
+                                <input type="submit"  value="Registrar" class="btn btn-primary" id="btnAccion">
+                                <input type="button"  value="Nuevo" onclick="limpiar()" class="btn btn-success" id="btnNuevo">
                             </div>
                     </div>
 
                 </form>
+                
+                
+
+             
             </div>
         </div>
         <div class="col-md-12">
@@ -176,6 +185,10 @@ include_once "includes/header.php";
                                         <form action="eliminar_producto.php?id=<?php echo $data['codproducto']; ?>" method="post" class="confirmar d-inline">
                                             <button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i> </button>
                                         </form>
+                                        <a href="ingresarexistencias.php?id_producto=<?php echo $data['codproducto']; ?>" class="btn btn-warning">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+
                                     </td>
                                 </tr>
                         <?php }

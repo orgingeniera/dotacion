@@ -53,7 +53,7 @@ if (empty($_SESSION['active'])) {
     <div class="wrapper ">
         <div class="sidebar" data-color="purple" data-background-color="black" data-image="../assets/img/sidebar-1.jpg">
             <div class="logo"><a href="./" class="simple-text logo-normal">
-                    Sistemas Free
+                    Dotacion Docente
                 </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
@@ -132,7 +132,7 @@ if (empty($_SESSION['active'])) {
             <nav class="navbar navbar-expand-lg navbar-absolute fixed-top bg-dark">
                 <div class="container-fluid">
                     <div class="navbar-wrapper">
-                        <a class="navbar-brand" href="javascript:;">Sistema de Venta</a>
+                        <a class="navbar-brand" href="javascript:;">Sistema Dotación Docentes</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="sr-only">Toggle navigation</span>

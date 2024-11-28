@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (!isset($_SESSION['idUser'])) {
+    // Redirigir al usuario al index si no está definido
+    header("Location: index.php");
+    exit;
+}
 include "../conexion.php";
 $id_user = $_SESSION['idUser'];
 $permiso = "proveedores";

@@ -8,50 +8,39 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // Obtener datos del cuerpo de la solicitud
 $input = json_decode(file_get_contents('php://input'), true);
 // Obtener datos del formulario enviados por POST
+$dotacion = $_POST['dotacion'] ?? '';
+$estado = $_POST['estado'] ?? '';
+$anio = $_POST['anio'] ?? '';
+$fecha_inicio = $_POST['fechaInicio'] ?? '';
+$fecha_fin = $_POST['fechaFin'] ?? '';
+$id_municipios = $_POST['id_municipios'] ?? '';
+$id_colegio = $_POST['id_colegio'] ?? '';
 
-$dotacion = $_POST['dotacion'];
-$estado = $_POST['estado'];
-$anio = $_POST['anio'];
-$id_municipios = $_POST['id_municipios'];
-$id_colegio = $_POST['id_colegio'];
 
-// Construcción de la consulta base
-$query = "
-    SELECT 
-        c.dotacion_entregada, 
-        c.bono, 
-        c.nombre, 
-        c.documento, 
-        m.nombre AS nombre_municipio, 
-        col.nombre AS nombre_colegio, 
-        c.sexo, 
-        c.tipo_funcionario, 
-        c.dotacion
-    FROM cliente c
-    LEFT JOIN municipios m ON c.id_municipios = m.id_municipios
-    LEFT JOIN colegios col ON c.id_colegio = col.id_colegios
-    WHERE YEAR(c.fecha) = '$anio' 
-      AND c.dotacion LIKE '%$dotacion%' 
-";
+$filtro = "WHERE 1=1";
+if ($dotacion) $filtro .= " AND cliente.dotacion = '$dotacion'";
+if ($estado) $filtro .= " AND cliente.dotacion_entregada = $estado";
+if ($anio) $filtro .= " AND YEAR(cliente.fecha) = '$anio'";
+if ($fecha_inicio && $fecha_fin) $filtro .= " AND cliente.fecha_entrega IS NOT NULL AND cliente.fecha_entrega BETWEEN '$fecha_inicio' AND '$fecha_fin'";
+if ($id_municipios) $filtro .= " AND cliente.id_municipios = '$id_municipios'";
+if ($id_colegio) $filtro .= " AND cliente.id_colegio = '$id_colegio'";
 
-// Filtrar según el estado de la dotación
-if ($estado == "dotado") {
-    $query .= " AND c.dotacion_entregada = 1";
-} elseif ($estado == "sin_dotacion") {
-    $query .= " AND c.dotacion_entregada = 0";
-}
-
-// Filtrar según el municipio si se seleccionó uno
-if (!empty($id_municipios)) {
-    $query .= " AND c.id_municipios = '$id_municipios'";
-}
-
-// Filtrar según el colegio si se seleccionó uno
-if (!empty($id_colegio)) {
-    $query .= " AND c.id_colegio = '$id_colegio'";
-}
-
-$query .= " ORDER BY c.bono ASC";
+$query = "SELECT 
+            cliente.dotacion_entregada,
+            cliente.bono,
+            cliente.nombre,
+            cliente.documento,
+            cliente.id_municipios,
+            municipios.nombre AS nombre_municipio,
+            cliente.id_colegio,
+            colegios.nombre AS nombre_colegio,
+            cliente.sexo,
+            cliente.tipo_funcionario,
+            cliente.dotacion
+          FROM cliente
+          LEFT JOIN municipios ON cliente.id_municipios = municipios.id_municipios
+          LEFT JOIN colegios ON cliente.id_colegio = colegios.id_colegios
+          $filtro";
 
 $result = mysqli_query($conexion, $query);
 

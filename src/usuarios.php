@@ -1,6 +1,11 @@
 <?php
 session_start();
 header("Cache-Control: no-cache, must-revalidate");
+if (!isset($_SESSION['idUser'])) {
+    // Redirigir al usuario al index si no está definido
+    header("Location: index.php");
+    exit;
+}
 $permiso = 'usuarios';
 $id_user = $_SESSION['idUser'];
 include "../conexion.php";
