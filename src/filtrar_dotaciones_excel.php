@@ -15,7 +15,7 @@ $fecha_inicio = $_POST['fechaInicio'] ?? '';
 $fecha_fin = $_POST['fechaFin'] ?? '';
 $id_municipios = $_POST['id_municipios'] ?? '';
 $id_colegio = $_POST['id_colegio'] ?? '';
-
+$tipo_funcionario = $_POST['tipofuncionario'] ?? '';
 
 $filtro = "WHERE 1=1";
 if ($dotacion) $filtro .= " AND cliente.dotacion = '$dotacion'";
@@ -24,6 +24,7 @@ if ($anio) $filtro .= " AND YEAR(cliente.fecha) = '$anio'";
 if ($fecha_inicio && $fecha_fin) $filtro .= " AND cliente.fecha_entrega IS NOT NULL AND cliente.fecha_entrega BETWEEN '$fecha_inicio' AND '$fecha_fin'";
 if ($id_municipios) $filtro .= " AND cliente.id_municipios = '$id_municipios'";
 if ($id_colegio) $filtro .= " AND cliente.id_colegio = '$id_colegio'";
+if ($tipo_funcionario) $filtro .= " AND cliente.tipo_funcionario = '$tipo_funcionario'";
 
 $query = "SELECT 
             cliente.dotacion_entregada,

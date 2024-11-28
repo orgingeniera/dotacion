@@ -13,7 +13,13 @@ $existe = mysqli_fetch_all($sql);
 if (empty($existe) && $id_user != 1) {
     header('Location: permisos.php');
 }
-$query = mysqli_query($conexion, "SELECT v.*, c.idcliente, c.nombre FROM ventas v INNER JOIN cliente c ON v.id_cliente = c.idcliente");
+
+if($_SESSION['tipo'] == 1){
+    $query = mysqli_query($conexion, "SELECT v.*, c.idcliente, c.nombre, c.documento FROM ventas v INNER JOIN cliente c ON v.id_cliente = c.idcliente");
+}else{
+    $query = mysqli_query($conexion, "SELECT v.*, c.idcliente, c.nombre, c.documento FROM ventas v INNER JOIN cliente c ON v.id_cliente = c.idcliente WHERE v.id_usuario = " . $id_user);
+
+}
 include_once "includes/header.php";
 ?>
 <div class="card">
@@ -26,6 +32,7 @@ include_once "includes/header.php";
                 <thead class="thead-dark">
                     <tr>
                         <th>#</th>
+                        <th>Documento</th>
                         <th>Docente</th>
                         <th>Dotación</th>
                         <th>Fecha</th>
@@ -36,6 +43,7 @@ include_once "includes/header.php";
                     <?php while ($row = mysqli_fetch_assoc($query)) { ?>
                         <tr>
                             <td><?php echo $row['id']; ?></td>
+                            <td><?php echo $row['documento']; ?></td>
                             <td><?php echo $row['nombre']; ?></td>
                             <td><?php echo $row['dataciones']; ?></td>
                             <td><?php echo $row['fecha']; ?></td>

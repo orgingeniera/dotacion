@@ -63,6 +63,14 @@ include_once "includes/header.php";
                         <option value="">Seleccione un colegio</option>
                     </select>
            </div>
+           <div class="col-md-6">
+                    <label for="tipo_funcionario" class="font-weight-bold">Tipo Funcionario</label>
+                    <select name="tipo_funcionario" required id="tipo_funcionario" class="form-control">
+                        <option value="">Seleccione</option>
+                        <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                        <option value="DOCENTE">DOCENTE</option>
+                    </select>
+                </div>
                 
         
                     <!-- <div class="col-md-6">
@@ -230,6 +238,8 @@ include_once "includes/header.php";
         const estado = document.getElementById('estado').value;
         const idmunicipios = document.getElementById('id_municipios').value;
         const idcolegio = document.getElementById('id_colegio').value;
+        const tipofuncionario = document.getElementById('tipo_funcionario').value;
+        
         let anioSeleccionado = null;
         let fechaInicio = null;
         let fechaFin = null;
@@ -247,8 +257,7 @@ include_once "includes/header.php";
             alert('Por favor, seleccione el intervalo de fechas.');
             return;
         }
-       console.log(`${dotacion} ${estado} ${idmunicipios} ${idcolegio} ${anioSeleccionado} ${fechaInicio} ${fechaFin}`)
-        // Realizar petición AJAX
+          // Realizar petición AJAX
         const response = await fetch('filtrar_dotaciones.php', {
             method: 'POST',
             headers: {
@@ -259,6 +268,7 @@ include_once "includes/header.php";
                 estado,
                 idmunicipios,
                 idcolegio,
+                tipofuncionario,
                 anio: anioSeleccionado,
                 fechaInicio,
                 fechaFin
@@ -296,6 +306,8 @@ include_once "includes/header.php";
             var estado = $('#estado').val();
             var id_municipios = $('#id_municipios').val();
             var id_colegio = $('#id_colegio').val();
+            var tipofuncionario = $('#tipo_funcionario').val();
+
             //var anio = $('#anio').val();
 
             // Enviar datos por AJAX
@@ -309,6 +321,7 @@ include_once "includes/header.php";
                     id_colegio: id_colegio,
                     anio: anioSeleccionado,
                     fechaInicio: fechaInicio,
+                    tipofuncionario: tipofuncionario,
                     fechaFin: fechaFin
                 },
                 xhrFields: {

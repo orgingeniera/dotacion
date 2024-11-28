@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
-   /* $('#producto').on('change', function () {
+    $('#producto').on('change', function () {
         var codigoProducto = $(this).val(); // Obtener el valor seleccionado
         if (codigoProducto) {
        
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
-    });*/
+    });
     
 
     $('#btn_generar').click(function (e) {
@@ -648,6 +648,7 @@ function editarUsuario(id) {
             $('#nombre').val(datos.nombre);
             $('#usuario').val(datos.usuario);
             $('#correo').val(datos.correo);
+            $('#tipo').val(datos.tipo);
             $('#id').val(datos.idusuario);
             $('#btnAccion').val('Modificar');
         },

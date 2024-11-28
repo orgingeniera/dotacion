@@ -8,6 +8,7 @@ $fecha_inicio = $data['fechaInicio'] ?? '';
 $fecha_fin = $data['fechaFin'] ?? '';
 $id_municipios = $data['idmunicipios'] ?? '';
 $id_colegio = $data['idcolegio'] ?? '';
+$tipo_funcionario = $data['tipofuncionario'] ?? '';
 
 $filtro = "WHERE 1=1";
 if ($dotacion) $filtro .= " AND cliente.dotacion = '$dotacion'";
@@ -16,6 +17,8 @@ if ($anio) $filtro .= " AND YEAR(cliente.fecha) = '$anio'";
 if ($fecha_inicio && $fecha_fin) $filtro .= " AND cliente.fecha_entrega IS NOT NULL AND cliente.fecha_entrega BETWEEN '$fecha_inicio' AND '$fecha_fin'";
 if ($id_municipios) $filtro .= " AND cliente.id_municipios = '$id_municipios'";
 if ($id_colegio) $filtro .= " AND cliente.id_colegio = '$id_colegio'";
+if ($tipo_funcionario) $filtro .= " AND cliente.tipo_funcionario = '$tipo_funcionario'";
+
 
 $query = "SELECT 
             cliente.dotacion_entregada,
