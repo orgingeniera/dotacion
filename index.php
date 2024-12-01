@@ -56,9 +56,12 @@ if (!empty($_SESSION['active'])) {
 
     <style>
         body {
-            background-color: #f4f6f9;
-            
-        }
+        background: url('assets/img/dotacion.png') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -108,7 +111,7 @@ if (!empty($_SESSION['active'])) {
 <body>
 
     <div class="login-container">
-        <center><b class="title">Iniciar Sesión</b></center>
+        <center><b class="title">Iniciar Sesión</b><br>Dotación docente</center>
         <form action="" id="login-form" method="POST">
             <div class="user-details">
                 <div class="input-box">
@@ -120,7 +123,15 @@ if (!empty($_SESSION['active'])) {
                 <?php echo (isset($alert)) ? $alert : '' ; ?>
                 <div class="button">
                     <input type="submit" value="Login">
-                </div>
+                </div><br>
+                <center>
+                <a 
+                    class="btn btn-primary d-inline-flex align-items-center" 
+                    target="_blank" 
+                    href="assets/archivos/MANUAL DE USUARIO SOFTWARE DOTACION DOCENTE.pdf">
+                    <i class="bi bi-file-earmark-text me-2"></i> Ver documentación del sistema
+                </a>
+                </center>
             </div>
         </form>
         <div class="checkbox-container">

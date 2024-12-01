@@ -42,7 +42,7 @@ if (!empty($_POST)) {
                         </button>
                     </div>';
             } else {
-                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria,fecha) values ('$codigo', '$producto', 0, '$cantidad', '$id_categoria',CURDATE())");
+                $query_insert = mysqli_query($conexion, "INSERT INTO producto(codigo,descripcion,precio,existencia,id_categoria,fecha) values ('$codigo', '$producto', $precio, '$cantidad', '$id_categoria',CURDATE())");
                 if ($query_insert) {
                     $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto registrado
@@ -57,7 +57,7 @@ if (!empty($_POST)) {
                 }
             }
         } else {
-            $query_update = mysqli_query($conexion, "UPDATE producto SET codigo = '$codigo', descripcion = '$producto', precio= 0, existencia = $cantidad, id_categoria=$id_categoria WHERE codproducto = $id");
+            $query_update = mysqli_query($conexion, "UPDATE producto SET codigo = '$codigo', descripcion = '$producto', precio= $precio, existencia = $cantidad, id_categoria=$id_categoria WHERE codproducto = $id");
             if ($query_update) {
                 $_SESSION['alert'] ='<div class="alert alert-success alert-dismissible fade show" role="alert">
                         Producto Modificado
@@ -112,7 +112,7 @@ include_once "includes/header.php";
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="precio" class=" text-dark font-weight-bold">Precio</label>
-                                <input type="text" value="0" readonly placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
+                                <input type="text" value="0"  placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
                             </div>
                         </div>
                         <div class="col-md-2">

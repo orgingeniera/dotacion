@@ -1,8 +1,19 @@
 <?php
-    $host = "localhost";
+//PRODUCCION
+/*
+ $host = "localhost";
+ $user = "funremus_root";
+ $clave = "84os091*#*@0328O";
+ $bd = "sistema";*/
+ 
+
+ //LOCAL
+ $host = "localhost";
     $user = "root";
     $clave = "";
     $bd = "sistema";
+
+
     $conexion = mysqli_connect($host,$user,$clave,$bd);
     if (mysqli_connect_errno()){
         echo "No se pudo conectar a la base de datos";

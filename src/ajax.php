@@ -23,6 +23,7 @@ if (isset($_GET['q'])) {
     if ($row = mysqli_fetch_assoc($producto)) {
         $data['id'] = $row['codproducto'];
         $data['existencia'] = $row['existencia'];
+        $data['precio'] = $row['precio'];
         echo json_encode($data);
     } else {
         echo json_encode(null); // No se encontró ningún producto
@@ -37,9 +38,9 @@ if (isset($_GET['q'])) {
         $data['descripcion'] = $row['codigo'];
         $data['cantidad'] = $row['cantidad'];
         $data['talla'] = $row['descripcion'];
-       /* $data['descuento'] = $row['descuento'];
+       /* $data['descuento'] = $row['descuento'];*/
         $data['precio_venta'] = $row['precio_venta'];
-        $data['sub_total'] = $row['total'];*/
+        $data['sub_total'] = $row['total'];
         array_push($datos, $data);
     }
     echo json_encode($datos);
@@ -179,8 +180,10 @@ if (isset($_POST['regDetalle'])) {
     $id = $_POST['id'];
     $cant = $_POST['cant'];
     $precio = $_POST['stock'];
+    $precio = $_POST['precio'];
     $id_user = $_SESSION['idUser'];
-    $total =   $cant - $precio;
+    //$total =   $cant - $precio;
+    $totaln = $precio * $cant;
     $verificar = mysqli_query($conexion, "SELECT * FROM detalle_temp WHERE id_producto = $id AND id_usuario = $id_user");
     $result = mysqli_num_rows($verificar);
     $datos = mysqli_fetch_assoc($verificar);
@@ -188,7 +191,8 @@ if (isset($_POST['regDetalle'])) {
     if ($result > 0) {
        
         $cantidad = $datos['cantidad'] + $cant;
-        $total_precio = ($cantidad * $total);
+        $total_precio = ($cantidad * $totaln);
+       // $total_precio = ($cantidad * $total);
         $query = mysqli_query($conexion, "UPDATE detalle_temp SET cantidad = $cantidad, total = '$total_precio' WHERE id_producto = $id AND id_usuario = $id_user");
         if ($query) {
                     // Consultar la existencia en la tabla `producto`
@@ -204,7 +208,7 @@ if (isset($_POST['regDetalle'])) {
                     $msg = "errorexistencia";
                     
                 // Opcional: puedes deshacer la actualización en `detalle_temp` si deseas
-                mysqli_query($conexion, "UPDATE detalle_temp SET cantidad = cantidad - $cant, total = total - ($cant * $total) WHERE id_producto = $id AND id_usuario = $id_user");
+                mysqli_query($conexion, "UPDATE detalle_temp SET cantidad = cantidad - $cant, total = total - ($cant * $totaln) WHERE id_producto = $id AND id_usuario = $id_user");
             } else {
                 // Si todo está correcto
                 $msg = "actualizado";
@@ -214,7 +218,7 @@ if (isset($_POST['regDetalle'])) {
         }
     }
   }else{
-        $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, cantidad ,precio_venta, total) VALUES ($id_user, $id, $cant,'$precio', '$total')");
+        $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, cantidad ,precio_venta, total) VALUES ($id_user, $id, $cant,'$precio', '$totaln')");
         if ($query) {
             $msg = "registrado";
         }else{

@@ -30,19 +30,20 @@ if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) 
                 $nombre = mysqli_real_escape_string($conexion, $row[0]);
                 $talla = mysqli_real_escape_string($conexion, $row[1]);
                 $existencia = mysqli_real_escape_string($conexion, $row[2]);
-                $idcategoria = mysqli_real_escape_string($conexion, $row[3]);
+                $precio = mysqli_real_escape_string($conexion, $row[3]);
+                $idcategoria = mysqli_real_escape_string($conexion, $row[4]);
                
                 $fecha = date('Y-m-d'); // Fecha actual
 
                 // Insertar los datos en la base de datos
                 $sql = "INSERT INTO producto (codigo, descripcion, precio, existencia, id_categoria,fecha) 
-                        VALUES ('$nombre', '$talla',0, '$existencia', '$idcategoria', '$fecha')";
+                        VALUES ('$nombre', '$talla',$precio, '$existencia', '$idcategoria', '$fecha')";
 
                 $query = mysqli_query($conexion, $sql);
 
                 if (!$query) {
                     $_SESSION['alert'] = '<div class="alert alert-warning">Error al insertar fila:'. mysqli_error($conexion).'</div>';
-                
+                    header("Location: productos.php"); 
                 }
             }
 
@@ -52,13 +53,15 @@ if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) 
             header("Location: productos.php"); 
         } catch (Exception $e) {
             $_SESSION['alert'] = '<div class="alert alert-warning">Error al procesar el archivo: '. $e->getMessage().'</div>';
+            header("Location: productos.php"); 
         }
     } else {
         $_SESSION['alert'] = 'Error: El archivo debe ser de tipo Excel (.xls o .xlsx).';
-        
+        header("Location: productos.php"); 
     }
 } else {
     $_SESSION['alert'] = 'Error: No se ha cargado ningún archivo.';
+    header("Location: productos.php"); 
   
 }
 ?>

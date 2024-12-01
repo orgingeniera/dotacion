@@ -5,6 +5,12 @@ $usuarios = mysqli_query($conexion, "SELECT * FROM usuario");
 $total['usuarios'] = mysqli_num_rows($usuarios);
 $clientes = mysqli_query($conexion, "SELECT * FROM cliente");
 $total['clientes'] = mysqli_num_rows($clientes);
+$docentesd = mysqli_query($conexion, "SELECT * FROM cliente WHERE tipo_funcionario='DOCENTE'");
+$total['docentesd'] = mysqli_num_rows($docentesd);
+$docentesa = mysqli_query($conexion, "SELECT * FROM cliente WHERE tipo_funcionario='ADMINISTRATIVO'");
+$total['docentesa'] = mysqli_num_rows($docentesa);
+$docentesad = mysqli_query($conexion, "SELECT * FROM cliente WHERE tipo_funcionario='DIRECTIVO DOCENTE'");
+$total['docentesad'] = mysqli_num_rows($docentesad);
 $productos = mysqli_query($conexion, "SELECT * FROM producto");
 $total['productos'] = mysqli_num_rows($productos);
 $ventas = mysqli_query($conexion, "SELECT * FROM ventas WHERE fecha > CURDATE()");
@@ -47,21 +53,7 @@ include_once "includes/header.php";
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-header card-header-success card-header-icon">
-                <div class="card-icon">
-                    <i class="fas fa-users fa-2x"></i>
-                </div>
-                <a href="docentes.php" class="card-category text-success font-weight-bold">
-                    Docentes
-                </a>
-                <h3 class="card-title"><?php echo $total['clientes']; ?></h3>
-            </div>
-            <div class="card-footer bg-secondary text-white">
-            </div>
-        </div>
-    </div>
+    
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header card-header-danger card-header-icon">
@@ -77,7 +69,7 @@ include_once "includes/header.php";
             </div>
         </div>
     </div>
-    
+   
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header card-header-success card-header-icon">
@@ -109,6 +101,68 @@ include_once "includes/header.php";
             </div>
         </div>
     </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <a href="docentes.php" class="card-category text-success font-weight-bold">
+                    Docentes
+                </a>
+                <h3 class="card-title"><?php echo $total['clientes']; ?></h3>
+            </div>
+            <div class="card-footer bg-secondary text-white">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <a href="docentes.php" class="card-category text-success font-weight-bold">
+                    Tipo Docente
+                </a>
+                <h3 class="card-title"><?php echo  $total['docentesd']; ?></h3>
+            </div>
+            <div class="card-footer bg-secondary text-white">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <a href="docentes.php" class="card-category text-success font-weight-bold">
+                    Administrativo
+                </a>
+                <h3 class="card-title"><?php echo  $total['docentesa']; ?></h3>
+            </div>
+            <div class="card-footer bg-secondary text-white">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <a href="docentes.php" class="card-category text-success font-weight-bold">
+                    Administrativo Docente
+                </a>
+                <h3 class="card-title"><?php echo  $total['docentesad']; ?></h3>
+            </div>
+            <div class="card-footer bg-secondary text-white">
+            </div>
+        </div>
+    </div>
+
+   
     <div class="col-md-12 card-header card-header-primary">
     <div >
                 <h3 class="title-2 m-b-40">Productos con stock mínimo</h3>

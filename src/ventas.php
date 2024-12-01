@@ -7,12 +7,12 @@ if (!isset($_SESSION['idUser'])) {
 }
 require("../conexion.php");
 $id_user = $_SESSION['idUser'];
-$permiso = "nueva_venta";
+/*$permiso = "nueva_venta";
 $sql = mysqli_query($conexion, "SELECT p.*, d.* FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.nombre = '$permiso'");
 $existe = mysqli_fetch_all($sql);
 if (empty($existe) && $id_user != 1) {
     header('Location: permisos.php');
-}
+}*/
 include_once "includes/header.php";
 ?>
 <!--Para el select2-->
@@ -27,21 +27,22 @@ include_once "includes/header.php";
             <div class="card-body">
                 <form method="post">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <input type="hidden" id="idcliente" value="1" name="idcliente" required>
 
                                 <label>Documento</label>
                                  <input type="text" name="documentos" id="documentos" class="form-control" placeholder="Ingrese Cedula del docente" required>
+                            </div>
+                        </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" disabled required>
                                 </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Nombre</label>
-                                <input type="text" name="nombre" id="nombre" class="form-control" disabled required>
-                    </div>
-                        </div>
-                        <div class="col-md-4">
+                            </div>
+                   
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Dotación</label>
 
@@ -50,6 +51,14 @@ include_once "includes/header.php";
                                 </select>
 
                             </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                    <div class="col-md-12">
+                    <a href="#" class="btn btn-primary" id="btn_buscar" >
+                        <i class="fas fa-search"></i> Buscar
+                    </a>
                         </div>
                     </div>
                 </form>
@@ -83,6 +92,21 @@ include_once "includes/header.php";
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
+                            <label for="precio">Precio</label>
+                            <input id="precio" class="form-control" type="text" name="precio" placeholder="precio" disabled>
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-2">
+                        <div class="form-group">
+
+                            <label for="sub_totalprecio">Sub total</label>
+                            <input id="sub_totalprecio" class="form-control" type="text" name="sub_totalprecio" placeholder="Sub Total" disabled>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
 
                             <label for="stock">Stock</label>
                             <input  type="text" id="stock" class="form-control" name="stock" placeholder="stock" disabled>
@@ -97,6 +121,8 @@ include_once "includes/header.php";
 
                         </div>
                     </div>
+                   
+                    
                 </div>
 
             </div>
@@ -106,9 +132,11 @@ include_once "includes/header.php";
                 <thead class="thead-dark">
                     <tr>
                         <th>Id</th>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
+                        <th>Producto</th>                        
                         <th>Tallas</th>
+                        <th>Cantidad</th>
+                        <th>precio_venta</th>
+                        <th>sub_total</th>
                         <th>Accion</th>
                     </tr>
                 </thead>

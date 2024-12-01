@@ -69,6 +69,7 @@ include_once "includes/header.php";
                         <option value="">Seleccione</option>
                         <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
                         <option value="DOCENTE">DOCENTE</option>
+                        <option value="DIRECTIVO DOCENTE">DIRECTIVO DOCENTE</option>
                     </select>
                 </div>
                 
