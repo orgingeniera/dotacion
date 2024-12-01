@@ -22,39 +22,73 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
     })
+
     $("#documentos").on('keypress', function (e) {
         if (e.which === 13) { // 13 es el código de la tecla Enter
+           
             var documento = $(this).val(); // Obtiene el valor del campo de texto
-    
-            // Realiza la solicitud Ajax solo cuando se presiona Enter
-            $.ajax({
-                url: "ajax.php", // El archivo PHP que va a manejar la solicitud
-                dataType: "json",
-                data: {
-                    q: documento // Se pasa el valor del campo 'documento' a la consulta
-                },
-                success: function (data) {
-                    // Verifica si la respuesta contiene datos
-                    if (data.length > 0) {
-                        var ui = data[0]; // Usamos el primer resultado, puedes ajustar si es necesario
-                        $("#idcliente").val(ui.id);
-                        $("#nombre").val(ui.label);
-                        $("#documento").val(ui.documento);
-                        $("#dotaciones").empty();
-                        // Agregar las opciones al select con los valores de dotación
-                        data.forEach(function(item) {
-                            // Agregar cada opción al select
-                            $("#dotaciones").append(new Option('Dotación ' + item.dotacion, item.dotacion));
-                        });
-                       
-                    } else {
-                        alert("No se encontró ningún resultado.");
-                    }
-                }
-            });
+            
+                    // Realiza la solicitud Ajax solo cuando se presiona Enter
+                    $.ajax({
+                        url: "ajax.php", // El archivo PHP que va a manejar la solicitud
+                        dataType: "json",
+                        data: {
+                            q: documento // Se pasa el valor del campo 'documento' a la consulta
+                        },
+                        success: function (data) {
+                            // Verifica si la respuesta contiene datos
+                            if (data.length > 0) {
+                                var ui = data[0]; // Usamos el primer resultado, puedes ajustar si es necesario
+                                $("#idcliente").val(ui.id);
+                                $("#nombre").val(ui.label);
+                                $("#documento").val(ui.documento);
+                                $("#dotaciones").empty();
+                                // Agregar las opciones al select con los valores de dotación
+                                data.forEach(function(item) {
+                                    // Agregar cada opción al select
+                                    $("#dotaciones").append(new Option('Dotación ' + item.dotacion, item.dotacion));
+                                });
+                               
+                            } else {
+                                alert("No se encontró ningún resultado.");
+                            }
+                        }
+                    });
         }
     });
+    $('#btn_buscar').click(function (e) {
     
+
+        var documento = $('#documentos').val(); // Obtiene el valor del campo de texto
+        
+                // Realiza la solicitud Ajax solo cuando se presiona Enter
+                $.ajax({
+                    url: "ajax.php", // El archivo PHP que va a manejar la solicitud
+                    dataType: "json",
+                    data: {
+                        q: documento // Se pasa el valor del campo 'documento' a la consulta
+                    },
+                    success: function (data) {
+                        // Verifica si la respuesta contiene datos
+                        if (data.length > 0) {
+                            var ui = data[0]; // Usamos el primer resultado, puedes ajustar si es necesario
+                            $("#idcliente").val(ui.id);
+                            $("#nombre").val(ui.label);
+                            $("#documento").val(ui.documento);
+                            $("#dotaciones").empty();
+                            // Agregar las opciones al select con los valores de dotación
+                            data.forEach(function(item) {
+                                // Agregar cada opción al select
+                                $("#dotaciones").append(new Option('Dotación ' + item.dotacion, item.dotacion));
+                            });
+                           
+                        } else {
+                            alert("No se encontró ningún resultado.");
+                        }
+                    }
+                });
+    
+    })
     $('#producto').on('change', function () {
         var codigoProducto = $(this).val(); // Obtener el valor seleccionado
         if (codigoProducto) {
@@ -71,7 +105,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data) {
                         $("#id").val(data.id);
                         $("#stock").val(data.existencia);
+                        $("#precio").val(data.precio);
                         $("#cantidad").focus();
+                       
                     } else {
                         alert("No se encontró ningún producto con ese código.");
                     }
@@ -83,7 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
-
     $('#btn_generar').click(function (e) {
        
         e.preventDefault();
@@ -211,6 +246,7 @@ function calcularPrecio(e) {
     e.preventDefault();
     const cant = $("#cantidad").val();
     const stock = $('#stock').val();
+    const precio = $('#precio').val();
     if (parseInt(cant) > parseInt(stock)) {
         // Si la cantidad es mayor que el stock, mostrar mensaje
         Swal.fire({
@@ -223,12 +259,14 @@ function calcularPrecio(e) {
         $('#cantidad').focus(); // Volver a enfocar el campo cantidad
         return false; // Detener la ejecución del resto del código
     }
+    const totaln = cant * precio;
     const total = stock - cant;
     $('#sub_total').val(total);
+    $('#sub_totalprecio').val(totaln);
     if (e.which == 13) {
         if (cant > 0 && cant != '') {
             const id = $('#id').val();
-            registrarDetalle(e, id, cant, stock);
+            registrarDetalle(e, id, cant, stock,precio);
             $('#producto').focus();
         } else {
             $('#cantidad').focus();
@@ -280,9 +318,11 @@ function listar() {
             response.forEach(row => {
                 html += `<tr>
                 <td>${row['id']}</td>
-                <td>${row['descripcion']}</td>
-                <td>${row['cantidad']}</td>
+                <td>${row['descripcion']}</td>                
                 <td>${row['talla']}</td>
+                <td>${row['cantidad']}</td>
+                <td>${row['precio_venta']}</td>
+                <td>${row['sub_total']}</td>
                 <td><button class="btn btn-danger" type="button" onclick="deleteDetalle(${row['id']})">
                 <i class="fas fa-trash-alt"></i></button></td>
                 </tr>`;
@@ -293,7 +333,7 @@ function listar() {
     });
 }
 
-function registrarDetalle(e, id, cant, stock) {
+function registrarDetalle(e, id, cant, stock,precio) {
     if (document.getElementById('producto').value != '') {
        
         if (id != null) {
@@ -306,16 +346,21 @@ function registrarDetalle(e, id, cant, stock) {
                     id: id,
                     cant: cant,
                     regDetalle: action,
-                    stock: stock
+                    stock: stock,
+                    precio: precio
                 },
                 success: function (response) {
 
                     if (response == 'registrado') {
                         $('#cantidad').val('');
                         $('#stock').val('');
+                        $('#precio').val('');
                         $("#producto").val('');
                         $("#sub_total").val('');
+                       
+                        $("#sub_totalprecio").val('');
                         $("#producto").focus();
+                        $('#producto').val(null).trigger('change');
                         listar();
                         Swal.fire({
                             position: 'top-end',
@@ -327,7 +372,9 @@ function registrarDetalle(e, id, cant, stock) {
                     } else if (response == 'actualizado') {
                         $('#cantidad').val('');
                         $('#stock').val('');
+                        $('#precio').val('');
                         $("#producto").val('');
+                        $("#sub_totalprecio").val('');
                         $("#producto").focus();
                         listar();
                         Swal.fire({
@@ -340,7 +387,9 @@ function registrarDetalle(e, id, cant, stock) {
                     }else if (response == 'errorexistencia') {
                         $('#cantidad').val('');
                         $('#stock').val('');
+                        $('#precio').val('');
                         $("#producto").val('');
+                        $("#sub_totalprecio").val('');
                         $("#producto").focus();
                         listar();
                         Swal.fire({
@@ -423,7 +472,7 @@ function calcular() {
         var columnas = e.querySelectorAll("td");
 
         // obtenemos los valores de la cantidad y importe
-        var importe = parseFloat(columnas[6].textContent);
+        var importe = parseFloat(columnas[5].textContent);
 
         total += importe;
     });
@@ -452,7 +501,7 @@ if (document.getElementById("stockMinimo")) {
                 var nombre = [];
                 var cantidad = [];
                 for (var i = 0; i < data.length; i++) {
-                    nombre.push(data[i]['codigo']);
+                    nombre.push(data[i]['codigo']+"-talla:"+data[i]['descripcion']);
                     cantidad.push(data[i]['existencia']);
                 }
                 var ctx = document.getElementById("stockMinimo");
@@ -488,7 +537,7 @@ if (document.getElementById("ProductosVendidos")) {
                 var nombre = [];
                 var cantidad = [];
                 for (var i = 0; i < data.length; i++) {
-                    nombre.push(data[i]['codigo']);
+                    nombre.push(data[i]['codigo']+"- talla:"+data[i]['descripcion']);
                     cantidad.push(data[i]['cantidad']);
                 }
                 var ctx = document.getElementById("ProductosVendidos");
@@ -648,6 +697,7 @@ function editarUsuario(id) {
             $('#nombre').val(datos.nombre);
             $('#usuario').val(datos.usuario);
             $('#correo').val(datos.correo);
+            $('#precio').val(datos.precio);
             $('#tipo').val(datos.tipo);
             $('#id').val(datos.idusuario);
             $('#btnAccion').val('Modificar');

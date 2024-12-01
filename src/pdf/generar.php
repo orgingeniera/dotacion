@@ -37,6 +37,7 @@ $pdf->Cell(70, 5, "Datos del cliente", 0, 1, 'C', 0);
 $pdf->SetTextColor(0, 0, 0);
 
 $pdf->SetFont('Arial', '', 7);
+$pdf->Cell(30, 5, utf8_decode("C.C: ".$datosC['documento']), 0, 1, 'L');
 $pdf->Cell(30, 5, utf8_decode($datosC['nombre']), 0, 1, 'L');
 $pdf->Cell(20, 5, utf8_decode('Bono'), 0, 0, 'L');
 $pdf->Cell(20, 5, utf8_decode('Dotación'), 0, 1, 'L');
